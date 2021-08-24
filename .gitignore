@@ -22,3 +22,5 @@
 !Dockerfile
 !*.jinja
 !mapping.ttl
+
+secrets.yml
