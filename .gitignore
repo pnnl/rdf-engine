@@ -20,5 +20,4 @@
 !*.yml
 !*.md
 !Dockerfile
-!*.obda
-
+!*.jinja
