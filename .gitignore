@@ -21,3 +21,4 @@
 !*.md
 !Dockerfile
 !*.jinja
+!mapping.ttl
