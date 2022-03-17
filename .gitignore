@@ -11,6 +11,11 @@
 # don't ignore gitignore, hah
 !.gitignore
 # scripts and progs
+# data ver ctrl
+!*.dvc
+!dvc.lock
+# scripts and progs
+!*.cmdlines
 !*.sh
 !*.bat
 !*.cmd
@@ -24,3 +29,44 @@
 !mapping.ttl
 
 secrets.yml
+!*.coco
+!*.r
+
+# infra
+!*Dockerfile*
+!*.dockerfile
+
+
+
+# doc src
+!*.md
+# assuming (small) config type yamls
+!*.yaml
+!*.yml
+!*.smalljson
+# graphql schema
+!*.graphql
+# track template 'types'
+!*.template.*
+
+
+# ...but still
+# don't store your secrets
+secrets.*
+secret.*
+# ignore environments
+/envs
+# ignore generated dev env
+# _ should be deleted
+_.yml 
+environment.yml
+_.devenv.yml
+# ignore (generated) snapshots b/c they're getting big
+**/snapshots
+# ignore generated executable scripts
+**/scripts/bin
+**/wbin
+# ignore checkpoint files
+**/.ipynb_checkpoints
+# cicd
+/builds
