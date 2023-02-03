@@ -22,7 +22,6 @@
 !*.py
 !*.tf
 !*.yaml
-!*.yml
 !*.md
 !Dockerfile
 !*.jinja
@@ -30,8 +29,6 @@
 
 secrets.yml
 !*.coco
-!*.r
-
 # infra
 !*Dockerfile*
 !*.dockerfile
