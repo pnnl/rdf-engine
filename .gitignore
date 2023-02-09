@@ -25,7 +25,6 @@
 !*.md
 !Dockerfile
 !*.jinja
-!mapping.ttl
 
 secrets.yml
 !*.coco
