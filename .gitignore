@@ -46,6 +46,8 @@ secrets.yml
 !*.template.*
 
 
+!**/.vscode/settings.json
+
 # ...but still
 # don't store your secrets
 secrets.*
