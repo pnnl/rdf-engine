@@ -37,6 +37,7 @@ secrets.yml
 # doc src
 !*.md
 !*.toml
+!*.lock
 # assuming (small) config type yamls
 !*.yaml
 !*.yml
