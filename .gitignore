@@ -29,7 +29,7 @@
 !*.coco
 # infra
 !*Dockerfile*
-!*.dockerfile
+!*Containerfile*
 
 
 # doc src
