@@ -26,12 +26,10 @@
 !Dockerfile
 !*.jinja
 
-secrets.yml
 !*.coco
 # infra
 !*Dockerfile*
 !*.dockerfile
-
 
 
 # doc src
@@ -54,6 +52,8 @@ secrets.yml
 # don't store your secrets
 secrets.*
 secret.*
+!**/secret.py
+!**/secrets.py
 # ignore environments
 /envs
 # ignore generated dev env
