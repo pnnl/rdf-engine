@@ -50,6 +50,8 @@
 
 # ...but still
 # don't store your secrets
+!.env
+!.envrc
 secrets.*
 secret.*
 !**/secret.py
@@ -58,7 +60,7 @@ secret.*
 /envs
 # ignore generated dev env
 # _ should be deleted
-_.yml 
+_.yml
 environment.yml
 _.devenv.yml
 # ignore (generated) snapshots b/c they're getting big
@@ -70,3 +72,5 @@ _.devenv.yml
 **/.ipynb_checkpoints
 # cicd
 /builds
+
+/.luarc.json
