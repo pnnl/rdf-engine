@@ -16,6 +16,7 @@
 !dvc.lock
 # scripts and progs
 !*.cmdlines
+!*.qmd
 !*.sh
 !*.bat
 !*.cmd
