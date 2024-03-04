@@ -26,6 +26,9 @@
 !*.md
 !Dockerfile
 !*.jinja
+# queries
+!*.sparql
+!*.rq
 
 !*.coco
 # infra
