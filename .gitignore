@@ -34,7 +34,8 @@
 # infra
 !*Dockerfile*
 !*Containerfile*
-
+!.containerignore
+!*.containerfile
 
 # doc src
 !*.md
