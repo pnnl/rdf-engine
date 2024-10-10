@@ -22,7 +22,6 @@
 !*.cmd
 !*.py
 !*.tf
-!*.yaml
 !*.md
 !Dockerfile
 !*.jinja
@@ -39,8 +38,10 @@
 
 # doc src
 !*.md
-!*.toml
 !*.lock
+# config
+!*.toml
+!.python-version
 # assuming (small) config type yamls
 !*.yaml
 !*.yml
