@@ -41,6 +41,7 @@
 !*.lock
 # config
 !*.toml
+!*.ini
 !.python-version
 # assuming (small) config type yamls
 !*.yaml
