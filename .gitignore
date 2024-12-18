@@ -81,3 +81,5 @@ _.devenv.yml
 /builds
 
 /.luarc.json
+
+.aider*
