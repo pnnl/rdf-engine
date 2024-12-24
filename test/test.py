@@ -88,12 +88,19 @@ def insert(method, n=int(1e6)):
     from pyoxigraph import Store
     s = Store()
     q = quads(n=n)
+    from time import time
+    t0 = time()
     if method == 'objects': 
         s.bulk_extend(q)
-        # ~6s
+        print(time()-t0) # ~6s
     else:
         assert(method == 'serialized')
         from pyoxigraph import serialize, RdfFormat
         _ = serialize(q, format=RdfFormat.N_QUADS)
+        #_ = map(str, q)
+        #_ = '.\n'.join(_)
+        #if _: _ = _+'.\n'
+        print(time()-t0)
         s.bulk_load(_,   format=RdfFormat.N_QUADS)
+        print(time()-t0)
         # ~9s for ntriples and ttl
