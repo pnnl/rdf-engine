@@ -1,4 +1,14 @@
 
+def json():
+    return {}
+
+def jsonloader():
+    from json2rdf import j2r
+
+def mapper(db):
+    ...
+
+
 def test():
     from engine.triples import (ConstructQuery,
                                  Rules, PyRule, noeffect_pyfunc, 
@@ -63,3 +73,27 @@ def test_deanon():
     assert(do[0].subject     == s)
     assert(do[0].predicate   == p)
     assert(do[0].object      == o)
+
+
+def quads(n=1):
+    from pyoxigraph import Quad, Triple
+    from pyoxigraph import BlankNode, NamedNode
+    for i in range(n):
+        _ = Triple(BlankNode(), NamedNode('p:'), BlankNode())
+        yield Quad(*_)
+
+
+def insert(method, n=int(1e6)):
+    # performance
+    from pyoxigraph import Store
+    s = Store()
+    q = quads(n=n)
+    if method == 'objects': 
+        s.bulk_extend(q)
+        # ~6s
+    else:
+        assert(method == 'serialized')
+        from pyoxigraph import serialize, RdfFormat
+        _ = serialize(q, format=RdfFormat.N_QUADS)
+        s.bulk_load(_,   format=RdfFormat.N_QUADS)
+        # ~9s for ntriples and ttl
