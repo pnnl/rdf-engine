@@ -12,6 +12,8 @@
 !.gitignore
 # scripts and progs
 !*.py
+# doc
+!*.md
 # config
 !*.toml
 !*.yaml
