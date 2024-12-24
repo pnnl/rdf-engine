@@ -15,6 +15,7 @@
 # doc
 !*.md
 # config
+!*.ini
 !*.toml
 !*.yaml
 !*.yml
