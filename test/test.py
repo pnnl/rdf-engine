@@ -83,16 +83,17 @@ def quads(n=1):
         yield Quad(*_)
 
 
+
 def insert(method, n=int(1e6)):
     # performance
     from pyoxigraph import Store
     s = Store()
-    q = quads(n=n)
+    q = frozenset(quads(n=n))
     from time import time
     t0 = time()
     if method == 'objects': 
         s.bulk_extend(q)
-        print(time()-t0) # ~6s
+        print(time()-t0) # ~1.2s
     else:
         assert(method == 'serialized')
         from pyoxigraph import serialize, RdfFormat
@@ -103,4 +104,4 @@ def insert(method, n=int(1e6)):
         print(time()-t0)
         s.bulk_load(_,   format=RdfFormat.N_QUADS)
         print(time()-t0)
-        # ~9s for ntriples and ttl
+        # ~4s for ntriples and ttl
