@@ -11,75 +11,9 @@
 # don't ignore gitignore, hah
 !.gitignore
 # scripts and progs
-# data ver ctrl
-!*.dvc
-!dvc.lock
-# scripts and progs
-!*.cmdlines
-!*.qmd
-!*.sh
-!*.bat
-!*.cmd
 !*.py
-!*.tf
-!*.md
-!Dockerfile
-!*.jinja
-# queries
-!*.sparql
-!*.rq
-
-!*.coco
-# infra
-!*Dockerfile*
-!*Containerfile*
-!.containerignore
-!*.containerfile
-
-# doc src
-!*.md
-!*.lock
 # config
 !*.toml
-!*.ini
-!.python-version
-# assuming (small) config type yamls
 !*.yaml
 !*.yml
-!*.smalljson
-# graphql schema
-!*.graphql
-# track template 'types'
-!*.template.*
-
-
-!**/.vscode/settings.json
-
-# ...but still
-# don't store your secrets
-!.env
-!.envrc
-secrets.*
-secret.*
-!**/secret.py
-!**/secrets.py
-# ignore environments
-/envs
-# ignore generated dev env
-# _ should be deleted
-_.yml
-environment.yml
-_.devenv.yml
-# ignore (generated) snapshots b/c they're getting big
-**/snapshots
-# ignore generated executable scripts
-**/scripts/bin
-**/wbin
-# ignore checkpoint files
-**/.ipynb_checkpoints
-# cicd
-/builds
-
-/.luarc.json
-
-.aider*
+!*.lock

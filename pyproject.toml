@@ -1,0 +1,34 @@
+[project]
+name = "rdf-engine"
+dynamic = ['version' ]
+description = "Add your description here"
+readme = "README.md"
+requires-python = ">=3.11"
+dependencies = [
+    "pyoxigraph",
+    "rdflib", # just for 'deanon', otherwise dont want this
+    ]
+[dependency-groups]
+dev = [
+    'ipython', 'ipdb',
+    'rdflib',  # shouldn't need this as a 'run' dep (above)
+    'pytest',
+    'pytest-regressions',
+    'pre-commit',
+    'fire'
+]
+
+[project.scripts]
+# todo: perhaps a 'program file'
+
+[build-system]
+# > uv build
+# > uvx hatchling version major
+# uv backend 'std'
+# https://github.com/astral-sh/uv/issues/3957 
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+[tool.hatch.version]
+path = "src/rdf_engine/__init__.py"
+[tool.hatch.build.targets.sdist]
+include = ['src/**/*.py']
