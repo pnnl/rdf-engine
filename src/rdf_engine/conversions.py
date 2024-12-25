@@ -23,8 +23,8 @@ def og2rl(og: Store| Iterable[Quad] ) -> Dataset:
 
 
 class term:
-    from rdflib     import BNode     as rlBN, Literal as rlLit, URIRef as    rlNN
-    from pyoxigraph import BlankNode as ogBN, Literal as ogLit, NamedNode as ogNN
+    from rdflib.term    import BNode     as rlBN, Literal as rlLit, URIRef as    rlNN
+    from pyoxigraph     import BlankNode as ogBN, Literal as ogLit, NamedNode as ogNN
     class rl2og:
         def __call__(s, n):
             t = term
