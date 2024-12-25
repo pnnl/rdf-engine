@@ -1,83 +1,104 @@
-from pyoxigraph import Store, Quad
-from rdflib import Dataset
-from typing import Iterable
-
+"""
+just to use rdflib to canonicalize
+"""
 #use oxrdflib?
 #also deal with strttl
 
-def og2rl(og: Store| Iterable[Quad] ) -> Dataset:
-    # for doing things in rdflib
-    """
-    >>> from test import quads
-    >>> q = quads(n=1000)
-    >>> q = frozenset(q)
-    >>> ds = og2rl(q)
-    >>> len(ds) == len(q)
-    True
-    """
-    from pyoxigraph import serialize, RdfFormat
-    _ = serialize(og, format=RdfFormat.N_QUADS)
-    r = Dataset()
-    r.parse(data=_, format='application/n-quads')
-    return r
+class terms:
+    def _():
+        from rdflib.graph   import DATASET_DEFAULT_GRAPH_ID                   as DG
+        from rdflib.term    import BNode     as BN, Literal as Lit, URIRef    as NN
+        return locals()
+    rdflib = _()
+    def _():
+        from pyoxigraph     import BlankNode as BN, Literal as Lit, NamedNode as NN
+        from pyoxigraph     import DefaultGraph                               as DG; DG = DG()
+        return locals()
+    oxigraph = _()
+    from types import SimpleNamespace as NS
+    rdflib    = NS(**rdflib)
+    oxigraph  = NS(**oxigraph)
+    assert(frozenset(rdflib.__dict__.keys()) == frozenset(rdflib.__dict__.keys()))
+    del NS
 
-
-class term:
-    from rdflib.term    import BNode     as rlBN, Literal as rlLit, URIRef as    rlNN
-    from pyoxigraph     import BlankNode as ogBN, Literal as ogLit, NamedNode as ogNN
-    from rdflib.graph   import DATASET_DEFAULT_GRAPH_ID                       as rlDG
-    from pyoxigraph     import DefaultGraph                                   as ogDG; ogDG = ogDG()
-    class rl2og:
-        def __call__(s, n):
-            t = term
-            assert(isinstance(n, str)) # makes the following work for bn and nn
-            if isinstance(n,
-                        t.rlBN):
-                return  t.ogBN(n)
-            elif isinstance(n,
-                        t.rlLit):
-                return  t.ogLit(n,
-                            datatype=s(n.datatype) if n.datatype else None,
-                            language=n.language)
-            else:
-                assert(isinstance(n,
-                        t.rlNN))
-                if n is t.rlDG: return t.ogDG
-                return  t.ogNN(n)
-    rl2og = rl2og()
     class og2rl:
-        def __call__(s, n):
-            t = term
+        def __call__(slf, n):
+            rl = terms.rdflib
+            og = terms.oxigraph
             if isinstance(n,
-                        t.ogBN):
-                return  t.rlBN(n.value)
+                        og.BN):
+                return  rl.BN(n.value)
             elif isinstance(n,
-                        t.ogLit):
-                return  t.rlLit(n.value,
-                            datatype=s(n.datatype),
+                        og.Lit):
+                return  rl.Lit(n.value,
+                            datatype=slf(n.datatype),
                             lang=n.language)
+            elif n ==   og.DG:
+                return  rl.DG
             else:
                 assert(isinstance(n, 
-                        t.ogNN))
-                if n is t.ogDG: return t.rlDG
-                return  t.rlNN(n.value)
+                        og.NN))
+                return  rl.NN(n.value)
     og2rl = og2rl()
-term = term()
+
+    class rl2og:
+        def __call__(s, n):
+            rl = terms.rdflib
+            og = terms.oxigraph
+            assert(isinstance(n, str)) # makes the following work for bn and nn
+            if isinstance(n,
+                        rl.BN):
+                return  og.BN(n)
+            elif isinstance(n,
+                        rl.Lit):
+                return  og.Lit(n,
+                            datatype=s(n.datatype) if n.datatype else None,
+                            language=n.language)
+            if n ==     rl.DG:
+                return  og.DG
+            else:
+                assert(isinstance(n,
+                        rl.NN))
+                return  og.NN(n)
+    rl2og = rl2og()
+terms = terms()
 
 
-def rl2og(rl: Dataset) -> Iterable[Quad]:
-    # for putting it back in og
-    """
-    >>> from rdflib import Dataset
-    >>> from test import quads
-    >>> rl = og2rl(quads(n=1000))
-    >>> og = rl2og(rl)
-    >>> og = frozenset(og)
-    >>> len(rl) == len(og)
-    True
-    """
-    _ = rl.serialize(format='application/n-quads')
-    from pyoxigraph import parse, RdfFormat
-    _ = parse(_, format=RdfFormat.N_QUADS)
-    return _
+class types:
+    from typing import Union
+    rdflib =   Union[tuple(t for t in terms.rdflib  .__dict__.values() if t is not terms.rdflib  .DG)]
+    oxigraph = Union[tuple(t for t in terms.oxigraph.__dict__.values() if t is not terms.oxigraph.DG)]
 
+class rdflib:
+    class oxigraph:
+        from typing import Iterable
+        def __call__(slf, d: Iterable[Iterable[types.oxigraph]]) -> Iterable[Iterable[types.rdflib]]:
+            _ = lambda q: tuple(terms.rl2og(t) for t in q)
+            _ = map(_, d)
+            return _
+            from pyoxigraph import serialize, RdfFormat
+            _ = serialize(og, format=RdfFormat.N_QUADS)
+            return _
+            r = Dataset()
+            r.parse(data=_, format='application/n-quads')
+            return r
+    oxigraph = oxigraph()
+    class _:
+        def __call__(slf, ):
+            pass
+rdflib = rdflib()
+
+class oxigraph:
+    class rdflib:
+        from typing import Iterable
+        def __call__(slf, d: Iterable[Iterable[types.rdflib]]) -> Iterable[Iterable[types.oxigraph]]:
+            # for putting it back in og
+            _ = lambda q: tuple(terms.og2rl(t) for t in q)
+            _ = map(_, d)
+            return _
+            _ = rl.serialize(format='application/n-quads')
+            from pyoxigraph import parse, RdfFormat
+            _ = parse(_, format=RdfFormat.N_QUADS)
+            return _
+    rdflib = rdflib()
+oxigraph = oxigraph()
