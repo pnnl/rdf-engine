@@ -2,6 +2,8 @@ from pyoxigraph import Store, Quad
 from rdflib import Dataset
 from typing import Iterable
 
+#use oxrdflib?
+#also deal with strttl
 
 def og2rl(og: Store| Iterable[Quad] ) -> Dataset:
     # for doing things in rdflib
@@ -20,39 +22,43 @@ def og2rl(og: Store| Iterable[Quad] ) -> Dataset:
     return r
 
 
-class node:
+class term:
     from rdflib     import BNode     as rlBN, Literal as rlLit, URIRef as    rlNN
     from pyoxigraph import BlankNode as ogBN, Literal as ogLit, NamedNode as ogNN
     class rl2og:
         def __call__(s, n):
-            s = node
+            t = term
             assert(isinstance(n, str)) # makes the following work for bn and nn
             if isinstance(n,
-                        s.rlBN):
-                return  s.ogBN(n)
+                        t.rlBN):
+                return  t.ogBN(n)
             elif isinstance(n,
-                        s.rlLit):
-                return  s.ogLit(n, datatype=s(n.datatype) if n.datatype else None)
+                        t.rlLit):
+                return  t.ogLit(n,
+                            datatype=s(n.datatype) if n.datatype else None,
+                            language=n.language)
             else:
                 assert(isinstance(n,
-                        s.rlNN))
-                return  s.ogNN(n)
+                        t.rlNN))
+                return  t.ogNN(n)
     rl2og = rl2og()
     class og2rl:
         def __call__(s, n):
-            s = node
+            t = term
             if isinstance(n,
-                        s.ogBN):
-                return  s.rlBN(n.value)
+                        t.ogBN):
+                return  t.rlBN(n.value)
             elif isinstance(n,
-                        s.ogLit):
-                return  s.rlLit(n.value)
+                        t.ogLit):
+                return  t.rlLit(n.value,
+                            datatype=s(n.datatype),
+                            lang=n.language)
             else:
                 assert(isinstance(n, 
-                        s.ogNN))
-                return  s.rlNN(n.value)
+                        t.ogNN))
+                return  t.rlNN(n.value)
     og2rl = og2rl()
-node = node()
+term = term()
 
 
 def rl2og(rl: Dataset) -> Iterable[Quad]:
