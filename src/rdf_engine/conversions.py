@@ -25,6 +25,9 @@ def og2rl(og: Store| Iterable[Quad] ) -> Dataset:
 class term:
     from rdflib.term    import BNode     as rlBN, Literal as rlLit, URIRef as    rlNN
     from pyoxigraph     import BlankNode as ogBN, Literal as ogLit, NamedNode as ogNN
+    from rdflib.graph   import DATASET_DEFAULT_GRAPH_ID as rlDG
+    from pyoxigraph     import DefaultGraph             as ogDG
+    ogDG = ogDG()
     class rl2og:
         def __call__(s, n):
             t = term
@@ -40,6 +43,7 @@ class term:
             else:
                 assert(isinstance(n,
                         t.rlNN))
+                if n is t.rlDG: return t.ogDG
                 return  t.ogNN(n)
     rl2og = rl2og()
     class og2rl:
@@ -56,6 +60,7 @@ class term:
             else:
                 assert(isinstance(n, 
                         t.ogNN))
+                if n is t.ogDG: return t.rlDG
                 return  t.rlNN(n.value)
     og2rl = og2rl()
 term = term()
