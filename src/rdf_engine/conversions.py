@@ -26,8 +26,7 @@ class term:
     from rdflib.term    import BNode     as rlBN, Literal as rlLit, URIRef as    rlNN
     from pyoxigraph     import BlankNode as ogBN, Literal as ogLit, NamedNode as ogNN
     from rdflib.graph   import DATASET_DEFAULT_GRAPH_ID                       as rlDG
-    from pyoxigraph     import DefaultGraph                                   as ogDG
-    ogDG = ogDG()
+    from pyoxigraph     import DefaultGraph                                   as ogDG; ogDG = ogDG()
     class rl2og:
         def __call__(s, n):
             t = term
