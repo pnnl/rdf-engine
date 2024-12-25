@@ -1,3 +1,13 @@
+def quads(*, n=1, graph='g', anon=False):
+    from pyoxigraph import Quad, Triple
+    from pyoxigraph import BlankNode, NamedNode
+    for i in range(n):
+        if anon:
+            _ = Triple(BlankNode(), NamedNode(f'p:{i}'), BlankNode())
+        else:
+            _ = Triple(NamedNode(f's:{i}'), NamedNode(f'p:{i}'), NamedNode(f'o:{i}'))
+        yield Quad(*_, NamedNode(f'g:{graph}'))
+
 
 def json():
     return {}
@@ -9,7 +19,7 @@ def mapper(db):
     ...
 
 
-def test():
+def xtest():
     from engine.triples import (ConstructQuery,
                                  Rules, PyRule, noeffect_pyfunc, 
                                  Engine,
@@ -37,7 +47,7 @@ def test():
     return _
 
 
-def test_deanon():
+def xtest_deanon():
     from engine.triples import deanon, flatten
     from pyoxigraph import Triple, NamedNode, BlankNode
     # test bn deanoned stay stay the same.
@@ -75,17 +85,9 @@ def test_deanon():
     assert(do[0].object      == o)
 
 
-def quads(n=1):
-    from pyoxigraph import Quad, Triple
-    from pyoxigraph import BlankNode, NamedNode
-    for i in range(n):
-        _ = Triple(BlankNode(), NamedNode('p:'), BlankNode())
-        yield Quad(*_)
 
 
-
-def insert(method, n=int(1e6)):
-    # performance
+def insert(method, n=int(1e6)): # performance
     from pyoxigraph import Store
     s = Store()
     q = frozenset(quads(n=n))
@@ -105,3 +107,28 @@ def insert(method, n=int(1e6)):
         s.bulk_load(_,   format=RdfFormat.N_QUADS)
         print(time()-t0)
         # ~4s for ntriples and ttl
+
+def conversion(): # performance
+    i = quads(n=int(1e5))
+    i = frozenset(i)
+    from rdflib import Dataset
+    from rdf_engine.conversions import node, og2rl
+    from time import time
+    t0 = time()
+    #ds = og2rl(i)
+    #print(time()-t0) # ~2.2 sec
+    #_ = map(lambda q: tuple(map(node.og2rl, q), ), i)
+    #_ = frozenset(_)  # ~.7sec
+    from typing import DefaultDict
+    ds = DefaultDict(list)
+    for q in frozenset(i):
+        q = tuple(map(node.og2rl, q),)
+        ds[q[-1]].append(q[:3])
+    print(time()-t0)  # ~.9
+    return ds
+    #ds = Dataset()
+    #for q in _: ds.add(q) # ~2.4
+    #print(time()-t0)
+
+    return _
+    
