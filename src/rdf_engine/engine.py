@@ -36,7 +36,7 @@ class Engine:
                 delta = namedtuple('delta', ['before', 'after'] ))
 
     
-    def crank_once(self) -> Store:
+    def run1(self) -> Store:
         if hasattr(self, 'logging'):
             if self.logging.print:
                 line = '-'*10
@@ -83,7 +83,7 @@ class Engine:
         if self.MAX_CYCLE <= 0:
            return False
         # could put validations here
-        if len(self.db) == len(self.crank_once()):
+        if len(self.db) == len(self.run1()):
             return True
         else:
             return False
