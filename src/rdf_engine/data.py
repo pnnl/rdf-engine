@@ -31,3 +31,10 @@ class _index:
         return idx
 
 index = _index()
+
+from .db import Ingestable
+from typing import Iterable
+from pyoxigraph import Quad
+def quads(i: Ingestable) -> Iterable[Quad]:
+    from .db import ingest, Store
+    yield from ingest(Store(), i)
