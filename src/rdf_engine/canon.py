@@ -1,4 +1,4 @@
-def canon(triples):
+def _(triples):
     # algo seems to gets stuck (slow?)
     # wait for update TODO
     from pyoxigraph import Dataset, CanonicalizationAlgorithm
@@ -11,7 +11,7 @@ def canon(triples):
 
 from pyoxigraph import Quad
 from typing import Iterable
-def canon(quads: Iterable[Quad]) -> Iterable[Quad]:
+def quads(quads: Iterable[Quad]) -> Iterable[Quad]:
     from  pyoxigraph import BlankNode
     from .data import index
     for i,itriples in index(quads).items():
@@ -25,14 +25,31 @@ def canon(quads: Iterable[Quad]) -> Iterable[Quad]:
             yield from (Quad(t.subject, i.nestedpredicate, t.object) for t in g)
 
 
-def deanon(
-        quads: Iterable[Quad],
-        anon_uri = "urn:anon:hash:") -> Iterable[Quad]:
-    #for q in
-    ...
-
-
-
+class _deanon:
+    from pyoxigraph import Triple
+    def __call__(slf,
+            quads: Iterable[Quad],
+            uri = "urn:anon:hash:") -> Iterable[Quad]:
+        """takes blank node value as an identifier for a uri"""
+        _ = map(lambda q: slf.quad(q, uri), quads)
+        return _
+    @classmethod
+    def quad(cls, q: Quad, uri):
+        if isinstance(q.subject, cls.Triple):
+            _ = cls.Triple(*(cls.f(n, uri) for n in q.subject))
+            q = Quad(_, q.predicate, q.object, q.graph_name)
+        if isinstance(q.object, cls.Triple):
+            _ = cls.Triple(*(cls.f(n, uri) for n in q.object))
+            q = Quad(q.subject, q.predicate, _, q.graph_name)
+        return Quad(*(cls.f(n, uri) for n in q))
+    from pyoxigraph import BlankNode, NamedNode
+    @classmethod
+    def f(cls, n, uri: str):
+        if isinstance(n, cls.BlankNode):
+            return cls.NamedNode(uri+n.value)
+        else:
+            return n
+deanon = _deanon()
 
 def triples(ts):
     if not isinstance(ts, (list, tuple, set, frozenset)):
