@@ -1,4 +1,5 @@
-def quads(*, n=1, graph='g', anon=False):
+
+def quads(n=1, *, graph=None, anon=False, nested=False):
     from pyoxigraph import Quad, Triple
     from pyoxigraph import BlankNode, NamedNode
     for i in range(n):
@@ -6,7 +7,9 @@ def quads(*, n=1, graph='g', anon=False):
             _ = Triple(BlankNode(), NamedNode(f'p:{i}'), BlankNode())
         else:
             _ = Triple(NamedNode(f's:{i}'), NamedNode(f'p:{i}'), NamedNode(f'o:{i}'))
-        yield Quad(*_, NamedNode(f'g:{graph}'))
+        if nested:
+            _ = Triple(_, NamedNode('m:'), _)
+        yield Quad(*_,  NamedNode(f'g:{graph}') if graph else None)
 
 
 def json():
@@ -119,16 +122,16 @@ def conversion(): # performance
     #print(time()-t0) # ~2.2 sec
     #_ = map(lambda q: tuple(map(node.og2rl, q), ), i)
     #_ = frozenset(_)  # ~.7sec
-    from typing import DefaultDict
-    ds = DefaultDict(list)
-    for q in frozenset(i):
-        q = tuple(map(node.og2rl, q),)
-        ds[q[-1]].append(q[:3])
-    print(time()-t0)  # ~.9
-    return ds
-    #ds = Dataset()
+    # from typing import DefaultDict
+    # ds = DefaultDict(list)
+    # for q in frozenset(i):
+    #     q = tuple(map(node.og2rl, q),)
+    #     ds[q[-1]].append(q[:3])
+    # print(time()-t0)  # ~.9
+    # return ds
+    ds = Dataset()
+    ds.addN()
     #for q in _: ds.add(q) # ~2.4
     #print(time()-t0)
 
     return _
-    
