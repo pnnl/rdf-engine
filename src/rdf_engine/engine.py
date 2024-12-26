@@ -7,14 +7,14 @@ class Engine:
     from typing import Iterable
     from pyoxigraph import Store
     from inspect import signature
-    from .canon import deanon
+    from .canon import quads
     def __init__(self,
         db: Store=Store(), *,
         rules: Iterable[Rule] = [],
             MAX_CYCLE: int=99,
         # safe settings to avoid inf cycling
             canon: bool=True,
-            deanon: bool=True, deanon_uri: str=signature(deanon).parameters['uri'].default,
+            deanon: bool=True, deanon_uri: str=signature(quads.deanon).parameters['uri'].default,
         # typically expecting the engine to be used in a stand-alone program
             log: bool=True, log_print: bool=True, 
         ) -> None:
