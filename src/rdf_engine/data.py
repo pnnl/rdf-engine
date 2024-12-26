@@ -12,7 +12,7 @@ class _index:
         def quad(cls, q: Quad) -> Self:
             if isinstance(q.subject, Triple):
                 if not isinstance(q.object, Triple):
-                    raise ValueError('not handling nested subject without nested object')
+                    raise ValueError(f'not handling nested subject without nested object of ({q})')
                 np = q.predicate # i care about the predicate
             else:
                 np = None

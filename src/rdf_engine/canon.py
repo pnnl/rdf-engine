@@ -12,14 +12,26 @@ def canon(triples):
 from pyoxigraph import Quad
 from typing import Iterable
 def canon(quads: Iterable[Quad]) -> Iterable[Quad]:
+    from  pyoxigraph import BlankNode
     from .data import index
     for i,itriples in index(quads).items():
+        if isinstance(i.graph, BlankNode):
+            raise ValueError(f'not handling graph blank/anon node')
         g = triples(itriples)
         if not i.nestedpredicate:
             yield from (Quad(*t, i.graph) for t in g)
         else:
             assert(i.nestedpredicate)
             yield from (Quad(t.subject, i.nestedpredicate, t.object) for t in g)
+
+
+def deanon(
+        quads: Iterable[Quad],
+        anon_uri = "urn:anon:hash:") -> Iterable[Quad]:
+    #for q in
+    ...
+
+
 
 
 def triples(ts):
