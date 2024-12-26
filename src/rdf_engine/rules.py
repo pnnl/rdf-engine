@@ -1,5 +1,4 @@
-from typing import Callable, Iterable
-from pyoxigraph import Quad
+from typing import Callable
 from pyoxigraph import Store
 from .db import Ingestable
 Rule = Callable[[Store], Ingestable]
