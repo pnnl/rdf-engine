@@ -11,10 +11,12 @@ class Engine:
     def __init__(self,
         db: Store=Store(), *,
         rules: Iterable[Rule] = [],
-            MAX_CYCLE: int=999,
-        canon: bool=True,
-        deanon: bool=True, deanon_uri: str=signature(deanon).parameters['uri'].default,
-        log: bool=False, log_print: bool=False,
+            MAX_CYCLE: int=99,
+        # safe settings to avoid inf cycling
+            canon: bool=True,
+            deanon: bool=True, deanon_uri: str=signature(deanon).parameters['uri'].default,
+        # typically expecting the engine to be used in a stand-alone program
+            log: bool=True, log_print: bool=True, 
         ) -> None:
         self.rules = list(rules)
         self.db = db
