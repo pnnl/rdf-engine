@@ -1,3 +1,7 @@
+"""
+canonicalization
+"""
+
 def _(triples):
     # algo seems to gets stuck (slow?)
     # wait for update TODO
@@ -12,11 +16,14 @@ def _(triples):
 from pyoxigraph import Quad
 from typing import Iterable
 def quads(quads: Iterable[Quad]) -> Iterable[Quad]:
+    """
+    canonicalization of sets of quads
+    """
     from  pyoxigraph import BlankNode
     from .data import index
     for i,itriples in index(quads).items():
         if isinstance(i.graph, BlankNode):
-            raise ValueError(f'not handling graph blank/anon node')
+            raise ValueError(f'not handling graph blank/anon node of graph {i.graph}')
         g = triples(itriples)
         if not i.nestedpredicate:
             yield from (Quad(*t, i.graph) for t in g)
