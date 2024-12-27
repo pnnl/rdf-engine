@@ -4,7 +4,7 @@ class _index:
     from typing import NamedTuple
     class index(NamedTuple):
         from pyoxigraph import NamedNode, BlankNode
-        nestedpredicate:  NamedNode | None
+        outerpredicate:  NamedNode | None
         graph:   NamedNode
 
         from typing import Self
@@ -13,11 +13,11 @@ class _index:
             if isinstance(q.subject, Triple):
                 if not isinstance(q.object, Triple):
                     raise ValueError(f'not handling nested subject without nested object of ({q})')
-                np = q.predicate # i care about the predicate
+                op = q.predicate # i care about the predicate
             else:
-                np = None
+                op = None
             return cls(
-                nestedpredicate = np,
+                outerpredicate = op,
                 graph = q.graph_name
             )
     

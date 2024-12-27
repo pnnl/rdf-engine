@@ -1,7 +1,6 @@
 """
 canonicalization
 """
-
 def _(triples):
     # algo seems to gets stuck (slow?)
     # wait for update TODO
@@ -25,11 +24,11 @@ class _quads:
             if isinstance(i.graph, BlankNode):
                 raise ValueError(f'not handling graph blank/anon node of graph {i.graph}')
             c = triples(itriples)
-            if not i.nestedpredicate:
+            if not i.outerpredicate:
                 yield from (self.Quad(*t, i.graph) for t in c)
             else:
-                assert(i.nestedpredicate)
-                yield from (self.Quad(t.subject, i.nestedpredicate, t.object) for t in c)
+                assert(i.outerpredicate)
+                yield from (self.Quad(t.subject, i.outerpredicate, t.object) for t in c)
 
     class _deanon:
         from pyoxigraph import Triple
