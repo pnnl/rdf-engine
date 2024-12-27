@@ -73,8 +73,14 @@ class types:
 class rdflib:
     class oxigraph:
         from typing import Iterable
+        from pyoxigraph import Triple, Quad
         def __call__(slf, d: Iterable[Iterable[types.oxigraph]]) -> Iterable[Iterable[types.rdflib]]:
-            _ = lambda q: tuple(terms.rl2og(t) for t in q)
+            def _(q):
+                _ = tuple(terms.rl2og(t) for t in q)
+                if len(_) == 3: return slf.Triple(*_)
+                else:
+                    assert(len(_) == 4)
+                    return slf.Quad(*_)
             _ = map(_, d)
             return _
             from pyoxigraph import serialize, RdfFormat
@@ -84,9 +90,6 @@ class rdflib:
             r.parse(data=_, format='application/n-quads')
             return r
     oxigraph = oxigraph()
-    class _:
-        def __call__(slf, ):
-            pass
 rdflib = rdflib()
 
 class oxigraph:

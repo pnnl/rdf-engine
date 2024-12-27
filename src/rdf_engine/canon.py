@@ -17,12 +17,18 @@ class _quads:
         for i,itriples in index(quads).items():
             if isinstance(i.graph, BlankNode):
                 raise ValueError(f'not handling graph blank/anon node of graph {i.graph}')
-            c = triples(itriples)
             if not i.outerpredicate:
+                c = triples(itriples)
                 yield from (self.Quad(*t, i.graph) for t in c)
             else:
                 assert(i.outerpredicate)
-                yield from (self.Quad(t.subject, i.outerpredicate, t.object) for t in c)
+                # separately to keep computations down.
+                # assumption: the nested triple terms are not related anonymously
+                c = triples(t.subject for t in itriples)
+                yield from (self.Quad(*t, i.graph) for t in c)
+                assert(len(itriples))
+                c = triples(t.object for t in itriples)
+                yield from (self.Quad(*t, i.graph) for t in c)
 
     class _deanon:
         from pyoxigraph import Triple
@@ -70,8 +76,14 @@ def triples(ts):
     if not isinstance(ts, (list, tuple, set, frozenset)):
         ts = frozenset(ts)
     assert(isinstance(ts, frozenset))
+    from pyoxigraph import Triple
+    for t in ts:
+        assert(not isinstance(t.subject, Triple))
+        assert(not isinstance(t.object, Triple))
+    # optimization
     if not hasanon(ts):
         return ts
+    
     from . import conversions as c
     ts = c.oxigraph.rdflib(ts)
     from rdflib import Graph
