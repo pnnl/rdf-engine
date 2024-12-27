@@ -24,12 +24,12 @@ class _quads:
         for i,itriples in index(quads).items():
             if isinstance(i.graph, BlankNode):
                 raise ValueError(f'not handling graph blank/anon node of graph {i.graph}')
-            g = triples(itriples)
+            c = triples(itriples)
             if not i.nestedpredicate:
-                yield from (self.Quad(*t, i.graph) for t in g)
+                yield from (self.Quad(*t, i.graph) for t in c)
             else:
                 assert(i.nestedpredicate)
-                yield from (self.Quad(t.subject, i.nestedpredicate, t.object) for t in g)
+                yield from (self.Quad(t.subject, i.nestedpredicate, t.object) for t in c)
 
     class _deanon:
         from pyoxigraph import Triple
