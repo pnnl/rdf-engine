@@ -5,7 +5,7 @@ class _index:
     class index(NamedTuple):
         from pyoxigraph import NamedNode, BlankNode
         outerpredicate:  NamedNode | None
-        graph:   NamedNode
+        graph:           NamedNode | BlankNode
 
         from typing import Self
         @classmethod
