@@ -1,15 +1,6 @@
 """
 canonicalization
 """
-def _(triples):
-    # algo seems to gets stuck (slow?)
-    # wait for update TODO
-    from pyoxigraph import Dataset, CanonicalizationAlgorithm
-    def _(triples):
-        d = Dataset(g.Quad(*t) for t in triples)
-        d.canonicalize(CanonicalizationAlgorithm.UNSTABLE) # ?? unstable??
-        for q in d: yield q.triple
-    return tuple(_(triples))
 
 class _quads:
     from pyoxigraph import Quad
@@ -18,6 +9,9 @@ class _quads:
         """
         canonicalization of sets of quads
         """
+        # the set of quads have to be broken into sets of triples
+        # after canonicalization,
+        # each set of triples has to be reassembled as quads
         from  pyoxigraph import BlankNode
         from .data import index
         for i,itriples in index(quads).items():
@@ -71,6 +65,7 @@ def hasanon(d: Iterable[Quad| Triple]):
             return True
     return False
 
+
 def triples(ts):
     if not isinstance(ts, (list, tuple, set, frozenset)):
         ts = frozenset(ts)
@@ -87,4 +82,12 @@ def triples(ts):
     ts = to_canonical_graph(ts)
     ts = c.rdflib.oxigraph(ts)
     return ts
-
+def _ogtriples(triples):
+    # algo seems to gets stuck (slow?)
+    # wait for update TODO
+    from pyoxigraph import Dataset, CanonicalizationAlgorithm, Quad
+    def _(triples):
+        d = Dataset(Quad(*t) for t in triples)
+        d.canonicalize(CanonicalizationAlgorithm.UNSTABLE) # ?? unstable??
+        for q in d: yield q.triple
+    yield from _(triples)
