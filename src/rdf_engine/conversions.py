@@ -31,7 +31,8 @@ class terms:
             elif isinstance(n,
                         og.Lit):
                 return  rl.Lit(n.value,
-                            datatype=slf(n.datatype),
+                            datatype=None if n.language else slf(n.datatype),
+                            #TypeError: A Literal can only have one of lang or datatype, per http://www.w3.org/TR/rdf-concepts/#section-Graph-Literal
                             lang=n.language)
             elif n ==   og.DG:
                 return  rl.DG
