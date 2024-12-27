@@ -54,10 +54,6 @@ class Engine:
                 start_time = monotonic()
 
             # do
-            if hasattr(self, 'logging'):
-                if self.logging.print:
-                    logger.info(f"applying: {repr(r)}")
-
             _ = r(self.db)
             if self.canon:
                 from .data import quads
