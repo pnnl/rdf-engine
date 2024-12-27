@@ -54,6 +54,10 @@ class Engine:
                 start_time = monotonic()
 
             # do
+            if hasattr(self, 'logging'):
+                if self.logging.print:
+                    logger.info(f"applying: {repr(r)}")
+
             _ = r(self.db)
             if self.canon:
                 from .data import quads
@@ -71,14 +75,14 @@ class Engine:
             # after
             if hasattr(self, 'logging'):
                 delta = self.logging.delta(before, len(self.db))
-                self.logging.log[r.spec].append(delta)
+                self.logging.log[r].append(delta)
                 if self.logging.print:
                     logger.info(f"# triples before {delta.before }, after {delta.after } => {delta.after-delta.before}.")
                     logger.info(f"took {'{0:.2f}'.format(monotonic()-start_time)} seconds")
         
         self.i += 1
-        self.db._store.flush()
-        self.db._store.optimize()
+        self.db.flush()
+        self.db.optimize()
         return self.db
 
     def stop(self) -> bool:
