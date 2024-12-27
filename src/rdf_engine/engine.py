@@ -9,8 +9,8 @@ class Engine:
     from inspect import signature
     from .canon import quads
     def __init__(self,
-        db: Store=Store(), *,
-        rules: Iterable[Rule] = [],
+        rules: Iterable[Rule] = [], *,
+        db: Store=Store(),
             MAX_NCYCLES: int=99,
         # safe settings to avoid inf cycling
         # but reduces performance
@@ -37,7 +37,7 @@ class Engine:
                 log = defaultdict(list),
                 delta = namedtuple('delta', ['before', 'after'] ))
 
-    
+    # TODO: make a method for applying one rule
     def run1(self) -> Store:
         if hasattr(self, 'logging'):
             if self.logging.print:
