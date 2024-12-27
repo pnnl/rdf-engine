@@ -11,7 +11,7 @@ class Engine:
     def __init__(self,
         db: Store=Store(), *,
         rules: Iterable[Rule] = [],
-            MAX_CYCLE: int=99,
+            MAX_NCYCLES: int=99,
         # safe settings to avoid inf cycling
         # but reduces performance
             canon: bool=True,
@@ -22,7 +22,7 @@ class Engine:
         ) -> None:
         self.rules = list(rules)
         self.db = db
-        self.MAX_CYCLE = MAX_CYCLE
+        self.MAX_NCYCLES = MAX_NCYCLES
         self.canon = True if deanon else canon
         self.deanon = deanon
         self.deanon_uri = deanon_uri
@@ -86,7 +86,7 @@ class Engine:
         return self.db
 
     def stop(self) -> bool:
-        if self.MAX_CYCLE <= 0:
+        if self.MAX_NCYCLES <= 0:
            return False
         # could put validations here
         if len(self.db) == len(self.run1()):
@@ -96,7 +96,7 @@ class Engine:
     
     def __iter__(self) -> Iterable[Store]:
         while (not self.stop()):
-            if self.i >= self.MAX_CYCLE:
+            if self.i >= self.MAX_NCYCLES:
                 if hasattr(self, 'logging'):
                     if self.logging.print:
                         logger.warning('reached max cycles')
