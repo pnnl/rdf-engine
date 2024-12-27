@@ -75,14 +75,16 @@ def hasanon(d: Iterable[Quad| Triple]):
 def triples(ts):
     if not isinstance(ts, (list, tuple, set, frozenset)):
         ts = frozenset(ts)
+    assert(isinstance(ts, frozenset))
     if not hasanon(ts):
         return ts
-    
     from . import conversions as c
     ts = c.oxigraph.rdflib(ts)
     from rdflib import Graph
-    ts = Graph().addN(ts)
+    _ = Graph()
+    for t in ts: ts = _.add(t)
     from rdflib.compare import to_canonical_graph
+    ts = _; del _
     ts = to_canonical_graph(ts)
     ts = c.rdflib.oxigraph(ts)
     return ts
