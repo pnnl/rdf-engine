@@ -1,7 +1,11 @@
 [project]
 name = "rdf-engine"
 dynamic = ['version' ]
-description = "Add your description here"
+description = "A rules engine for RDF data"
+authors = [
+    {"name" = "Majid alDosari", email="majid.aldosari@pnnl.gov"},
+    {"name" = "Majid alDosari", email="majidaldosari-github@yahoo.com"},
+ ]
 readme = "README.md"
 requires-python = ">=3.11"
 dependencies = [
