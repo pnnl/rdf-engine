@@ -24,11 +24,13 @@ class _quads:
                 assert(i.outerpredicate)
                 # separately to keep computations down.
                 # assumption: the nested triple terms are not related anonymously
-                c = triples(t.subject for t in itriples)
-                yield from (self.Quad(*t, i.graph) for t in c)
+                cs = triples(t.subject  for t in itriples)
                 assert(len(itriples))
-                c = triples(t.object for t in itriples)
-                yield from (self.Quad(*t, i.graph) for t in c)
+                co = triples(t.object   for t in itriples)
+                assert(len(cs) == len(co))
+                for s in cs:
+                    for o in co:
+                        yield self.Quad(s, i.outerpredicate, o)
 
     class _deanon:
         from pyoxigraph import Triple
@@ -73,13 +75,13 @@ def hasanon(d: Iterable[Quad| Triple]):
 
 
 def triples(ts):
-    if not isinstance(ts, (list, tuple, set, frozenset)):
+    if not isinstance(ts, frozenset):
         ts = frozenset(ts)
     assert(isinstance(ts, frozenset))
     from pyoxigraph import Triple
     for t in ts:
-        assert(not isinstance(t.subject, Triple))
-        assert(not isinstance(t.object, Triple))
+        assert(not isinstance(t.subject,    Triple))
+        assert(not isinstance(t.object,     Triple))
     # optimization
     if not hasanon(ts):
         return ts
@@ -93,6 +95,7 @@ def triples(ts):
     ts = _; del _
     ts = to_canonical_graph(ts)
     ts = c.rdflib.oxigraph(ts)
+    ts = frozenset(ts)
     return ts
 def _ogtriples(triples):
     # algo seems to gets stuck (slow?)
