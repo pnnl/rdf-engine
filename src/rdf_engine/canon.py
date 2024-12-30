@@ -30,7 +30,7 @@ class _quads:
                 assert(len(cs) == len(co))
                 for s in cs:
                     for o in co:
-                        yield self.Quad(s, i.outerpredicate, o)
+                        yield self.Quad(s, i.outerpredicate, o, i.graph)
 
     class _deanon:
         from pyoxigraph import Triple
