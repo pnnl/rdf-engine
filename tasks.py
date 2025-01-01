@@ -26,7 +26,7 @@ def ncommits(rev=rev):
 
 
 def chk_ver(rev=rev):
-    from json2rdf import __version__ as v
+    from rdf_engine import __version__ as v
     return str(v) == str(ncommits(rev=rev))
 
 
