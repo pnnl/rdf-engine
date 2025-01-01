@@ -1,4 +1,4 @@
-
+pkg = 'rdf_engine'
 
 def get_rev():
     from subprocess import check_output as run
@@ -13,7 +13,7 @@ def build(commit=False):
         return run(cmd, *p, cwd=Path(__file__).parent, **k)
     if commit:
         run(f'uvx hatchling version {ncommits()+1}', )
-        run('uv lock --upgrade-package json2rdf', )
+        run(f'uv lock --upgrade-package {pkg}', )
         # https://github.com/pre-commit/pre-commit/issues/747#issuecomment-386782080
         run('git add -u', )
     run('uv build')
@@ -27,6 +27,7 @@ def ncommits(rev=rev):
 
 def chk_ver(rev=rev):
     from rdf_engine import __version__ as v
+    assert(pkg) in locals()
     return str(v) == str(ncommits(rev=rev))
 
 
