@@ -1,4 +1,4 @@
-![PyPI - Status](https://img.shields.io/pypi/v/rdfengine)
+![PyPI - Status](https://img.shields.io/pypi/v/rdf-engine)
 
 # RDF-Engine
 
