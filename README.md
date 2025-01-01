@@ -1,4 +1,4 @@
-![PyPI - Status](https://img.shields.io/pypi/v/rdfengine)
+![PyPI - Status](https://img.shields.io/pypi/v/rdf-engine)
 
 # RDF-Engine
 
@@ -13,10 +13,14 @@ Rules are processes that generate triples.
 They are simply applied until no _new_ triples are produced.
 [Oxigraph](https://github.com/oxigraph/oxigraph) is used to store data.
 
+A rule is defined as a function that takes an Oxigraph instance
+and returns quads.
+
 ## Features
 
-* Handling of anonymous/blank nodes: they can be deanonimized
-* Oxigraph can handle RDF-star data and querying
+* Handling of anonymous/blank nodes: They can be deanonimized.
+* Oxigraph can handle RDF-star data and querying.
+However, if 
 
 
 ## Development Philosophy
