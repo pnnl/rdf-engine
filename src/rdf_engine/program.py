@@ -62,8 +62,6 @@ class Engine:           # ✔️
         chkdct(i,  args)
         # will just check for conflicts instead.
         # canon (T) =implies=> deanon (T)
-        if (i['canon'] == True) and (i['deanon'] == False):
-            raise ValueError(f'canon=True and deanon=False conflict.')
         if (i['deanon'] == True) and (i['canon'] == False):
             raise ValueError(f'deanon=True and canon=False conflict.')
 

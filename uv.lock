@@ -345,7 +345,7 @@ wheels = [
 
 [[package]]
 name = "rdf-engine"
-version = "198"
+version = "199"
 source = { editable = "." }
 dependencies = [
     { name = "pyoxigraph" },
