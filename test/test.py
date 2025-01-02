@@ -34,8 +34,7 @@ class Quads:
     def __call__(self, _):
         return quads(**self.params.__dict__)
     def __repr__(self):
-        return repr(self.params)
-
+        return repr(self.params).replace('namespace', 'Quads')
 
 
 def ttl():
@@ -78,10 +77,34 @@ def logging():
     logger.setLevel(logging.INFO)
 
 
+
+def test_prog():
+    _ = {
+        'db': 'db',
+        'execs': [
+            {'params': {
+                'MAX_NCYCLES': 5,
+                 'canon': True,
+                 'deanon': False,
+                 'log': True,
+                 'log_print': True,
+                 },
+             'rules': [
+                 {
+                     'module': 'test.py', 'maker': 'Quads',
+                     'params': {'n': 1, 'rand': False, 'graph': None, 'anon': False, 'nested': ''}
+                   }
+             ]
+            }
+        ]
+    }
+    from rdf_engine.program import Program
+    _ = Program.mk(_)
+    logging()
+    _.run()
+
+
 if __name__ == '__main__':
-    from rdf_engine import logger
-    import logging
-    logging.basicConfig(force=True) # force removes other loggers that got picked up.
-    logger.setLevel(logging.INFO)
-    test()
+    logging()
+    test_prog()
 
