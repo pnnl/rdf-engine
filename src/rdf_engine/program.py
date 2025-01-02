@@ -6,8 +6,10 @@ from typing import Callable
 from pathlib import Path
 
 def chkdct(d: dict, t: dict[str, type]):
-    for k in d: assert(k in t)
-    for k in t: assert(k in d)
+    for k in d:
+        if k not in t: raise ValueError(f'{k} not in {t.keys()}')
+    for k in t:
+        if k not in d: raise ValueError(f'{k} not in {d.keys()}')
     for tn,tt in t.items():
         try:
             if not isinstance(d[tn], tt):
