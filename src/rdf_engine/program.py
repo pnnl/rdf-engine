@@ -82,7 +82,10 @@ class Execution:
     def mk(cls, i: dict) -> Self:
         assert(isinstance(i, dict))
         rules = i['rules']
-        assert(isinstance(rules, list))
+        # /could/ make a case for having a rule /generator/
+        # but explicit > implict.
+        # i think it's clearer to just list it out
+        assert(isinstance(rules, list)) 
         rules = [Rule.mk(r) for r in rules]
         return cls(
             params = i['params'],
