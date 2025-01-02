@@ -20,9 +20,8 @@ dev = [
     'pytest',
     'pre-commit',
     'fire',
-    # https://github.com/astral-sh/uv/issues/9011#issuecomment-2568052402
-    # cli deps (repeated!)
-    'pyyaml'
+    # https://github.com/astral-sh/uv/issues/9011#issuecomment-2568139247
+    "rdf-engine[cli]"
 ]
 
 

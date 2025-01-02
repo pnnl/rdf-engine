@@ -345,7 +345,7 @@ wheels = [
 
 [[package]]
 name = "rdf-engine"
-version = "194"
+version = "195"
 source = { editable = "." }
 dependencies = [
     { name = "pyoxigraph" },
@@ -364,7 +364,7 @@ dev = [
     { name = "ipython" },
     { name = "pre-commit" },
     { name = "pytest" },
-    { name = "pyyaml" },
+    { name = "rdf-engine", extra = ["cli"] },
 ]
 
 [package.metadata]
@@ -381,7 +381,7 @@ dev = [
     { name = "ipython" },
     { name = "pre-commit" },
     { name = "pytest" },
-    { name = "pyyaml" },
+    { name = "rdf-engine", extras = ["cli"] },
 ]
 
 [[package]]
