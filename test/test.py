@@ -1,5 +1,8 @@
 
-def quads(n=1, *, rand=False, graph=None, anon=False, nested=''):
+def quads(n=1, *,
+            rand=False, anon=False,
+            graph=None,
+            nested='',):
     from pyoxigraph import Quad, Triple
     from pyoxigraph import BlankNode, NamedNode
 
@@ -92,7 +95,7 @@ def test_prog():
              'rules': [
                  {
                      'module': 'test.py', 'maker': 'Quads',
-                     'params': {'n': 1, 'rand': False, 'graph': None, 'anon': False, 'nested': ''}
+                     'params': {'n': 1, 'rand': False, 'graph': None, 'anon': False, 'nested': False}
                    }
              ]
             }
@@ -107,4 +110,3 @@ def test_prog():
 if __name__ == '__main__':
     logging()
     test_prog()
-

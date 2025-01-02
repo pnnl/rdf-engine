@@ -16,14 +16,26 @@ They are simply applied until no _new_ triples are produced.
 A rule is defined as a function that takes an Oxigraph instance
 and returns quads.
 
+
 ## Features
 
 * Handling of anonymous/blank nodes: They can be deanonimized.
 * Oxigraph can handle RDF-star data and querying.
 However, if 
 
+## Usage
+
+A 'program' is defined as a sequence of engine runs
+initialized by a `db'.
+Each engine run takes:
+* (engine) `params`
+* and a list of `rules`.
+Each rule needs a `module`, `maker`, and `params`.
+See program example in [test script](./test/test.py).
+
 
 ## Development Philosophy
 * **KISS**: It should only address executing rules.
 Therefore, the code is expected to be feature complete (without need for adding more 'features').
 * **Minimal dependencies**: follows from above.
+* **Explicit > Implicit**: Parameters should be specificed (explicitly).
