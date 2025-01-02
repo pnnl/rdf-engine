@@ -12,16 +12,22 @@ dependencies = [
     "pyoxigraph",
     "rdflib", # just for 'deanon', otherwise dont want this
     ]
+[project.optional-dependencies]
+cli = ['pyyaml']
 [dependency-groups]
 dev = [
     'ipython', 'ipdb',
     'pytest',
     'pre-commit',
-    'fire'
+    'fire',
+    # https://github.com/astral-sh/uv/issues/9011#issuecomment-2568052402
+    # cli deps (repeated!)
+    'pyyaml'
 ]
 
+
 [project.scripts]
-# todo: perhaps a 'program file'
+rdf-engine = "rdf_engine:cli"
 
 [build-system]
 # > uv build

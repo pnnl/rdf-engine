@@ -1,0 +1,32 @@
+db: db
+execs:
+  - params:
+      MAX_NCYCLES: 5
+      canon: True
+      deanon: False
+      log: True
+      log_print: True
+    rules:
+      - module: test.py
+        maker: Quads
+        params:
+          n: 1
+          rand: False
+          graph: null # null, ~, or absence of value to interpret as None
+          anon: False
+          nested: False
+  - params:
+      MAX_NCYCLES: 5
+      canon: True
+      deanon: False
+      log: True
+      log_print: True
+    rules:
+      - module: test.py
+        maker: Quads
+        params:
+          n: 1
+          rand: False
+          graph: null
+          anon: False
+          nested: False

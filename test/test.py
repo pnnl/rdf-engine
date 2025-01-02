@@ -82,45 +82,15 @@ def logging():
 
 def test_prog():
     from pathlib import Path
-    db = 'db'
+    s = Path('program.yaml').read_text()
+    from yaml import safe_load
+    db = safe_load(s)['db']
     if Path(db).exists():
         from shutil import rmtree
         rmtree(db, )
-    _ = {
-        'db': db,
-        'execs': [
-            {'params': {
-                'MAX_NCYCLES': 5,
-                 'canon': True,
-                 'deanon': False,
-                 'log': True,
-                 'log_print': True,
-                 },
-             'rules': [
-                {
-                    'module': 'test.py', 'maker': 'Quads',
-                    'params': {'n': 1, 'rand': False, 'graph': None, 'anon': False, 'nested': False}
-                }
-             ]
-            },
-            {'params': {
-                'MAX_NCYCLES': 5,
-                 'canon': True,
-                 'deanon': False,
-                 'log': True,
-                 'log_print': True,
-                 },
-             'rules': [
-                {
-                    'module': 'test.py', 'maker': 'Quads',
-                    'params': {'n': 1, 'rand': False, 'graph': None, 'anon': False, 'nested': False}
-                }
-             ]
-            }
-        ]
-    }
+    
     from rdf_engine.program import Program
-    _ = Program.mk(_)
+    _ = Program.parse(s)
     _.run()
 
 

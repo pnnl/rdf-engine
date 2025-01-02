@@ -345,11 +345,16 @@ wheels = [
 
 [[package]]
 name = "rdf-engine"
-version = "192"
+version = "193"
 source = { editable = "." }
 dependencies = [
     { name = "pyoxigraph" },
     { name = "rdflib" },
+]
+
+[package.optional-dependencies]
+cli = [
+    { name = "pyyaml" },
 ]
 
 [package.dev-dependencies]
@@ -359,11 +364,13 @@ dev = [
     { name = "ipython" },
     { name = "pre-commit" },
     { name = "pytest" },
+    { name = "pyyaml" },
 ]
 
 [package.metadata]
 requires-dist = [
     { name = "pyoxigraph" },
+    { name = "pyyaml", marker = "extra == 'cli'" },
     { name = "rdflib" },
 ]
 
@@ -374,6 +381,7 @@ dev = [
     { name = "ipython" },
     { name = "pre-commit" },
     { name = "pytest" },
+    { name = "pyyaml" },
 ]
 
 [[package]]

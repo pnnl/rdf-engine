@@ -131,8 +131,11 @@ class Program:
 
     from typing import Self
     @classmethod
-    def parse(self, i: str) -> Self:
-        from pyyaml import safe_load
+    def parse(cls, i: str) -> Self:
+        from yaml import safe_load
+        _ = safe_load(i)
+        _ = cls.mk(_)
+        return _
 
     def run(self) -> Store:
         for e in self.execs:
