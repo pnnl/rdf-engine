@@ -18,7 +18,7 @@ class Engine:
             deanon: bool=True, deanon_uri: str=signature(quads.deanon).parameters['uri'].default,
         # typically expecting the engine to be used in a stand-alone program
         # so it helps to have logging.
-            log: bool=True, log_print: bool=True, 
+            log: bool=True, log_print: bool=False,
         ) -> None:
         self.rules = list(rules)
         self.db = db
