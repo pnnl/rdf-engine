@@ -31,7 +31,7 @@ Each engine run takes:
 * (engine) `params`
 * and a list of `rules`.
 Each rule needs a `module`, `maker`, and `params`.
-See program example in [test script](./test/test.py).
+See program example in [test script](./test/program.yaml).
 
 
 ## Development Philosophy
