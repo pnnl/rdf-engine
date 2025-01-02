@@ -45,17 +45,28 @@ class Engine:           # ✔️
     def args(cls):
         from inspect import signature as sig
         from .engine import Engine
-        return {p:v.annotation
-                    for p,v in sig(Engine.__init__).parameters.items()
+        return {p:v for p,v in sig(Engine.__init__).parameters.items()
             if p not in {'self', }}
         
     @classmethod
     def mk(cls, i: dict):
         assert(isinstance(i, dict))
-        args = cls.args()
-        if i['deanon'] == False: args.pop('deanon_uri')
-        if i['log'] == False: args.pop('log_print')
+        args = {k:v.annotation for k,v in cls.args().items()}
+        # if                     then don't need these specified
+        if i['log']     == False:   args.pop('log_print')
+        if i['deanon']  == False:   args.pop('deanon_uri')
+        if i['canon']   == False:   args.pop('deanon')
+        # need to do accounting for implict cases
+        # if (i['deanon']  == True) and ('canon' not in i):
+        #     i['canon'] = False
         chkdct(i,  args)
+        # will just check for conflicts instead.
+        # canon (T) =implies=> deanon (T)
+        if (i['canon'] == True) and (i['deanon'] == False):
+            raise ValueError(f'canon=True and deanon=False conflict.')
+        if (i['deanon'] == True) and (i['canon'] == False):
+            raise ValueError(f'deanon=True and canon=False conflict.')
+
         from .engine import Engine
         if 'log_print' in i:
             if i['log_print']:
