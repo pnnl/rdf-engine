@@ -102,6 +102,20 @@ def test_prog():
                     'params': {'n': 1, 'rand': False, 'graph': None, 'anon': False, 'nested': False}
                 }
              ]
+            },
+            {'params': {
+                'MAX_NCYCLES': 5,
+                 'canon': True,
+                 'deanon': False,
+                 'log': True,
+                 'log_print': True,
+                 },
+             'rules': [
+                {
+                    'module': 'test.py', 'maker': 'Quads',
+                    'params': {'n': 1, 'rand': False, 'graph': None, 'anon': False, 'nested': False}
+                }
+             ]
             }
         ]
     }
@@ -111,5 +125,4 @@ def test_prog():
 
 
 if __name__ == '__main__':
-    from rdf_engine.program import Engine
     test_prog()

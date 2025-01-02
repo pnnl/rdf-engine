@@ -39,16 +39,18 @@ class Rule:
 # OO sucks
 #class Engine(Engine):  # ❌
 class Engine:           # ✔️
-    from inspect import signature as sig
-    from .engine import Engine
-    args = {p:v.annotation
-                for p,v in sig(Engine.__init__).parameters.items()
-        if p not in {'self', }}
+    @classmethod
+    def args(cls):
+        from inspect import signature as sig
+        from .engine import Engine
+        return {p:v.annotation
+                    for p,v in sig(Engine.__init__).parameters.items()
+            if p not in {'self', }}
         
     @classmethod
     def mk(cls, i: dict):
         assert(isinstance(i, dict))
-        args = cls.args
+        args = cls.args()
         if i['deanon'] == False: args.pop('deanon_uri')
         if i['log'] == False: args.pop('log_print')
         chkdct(i,  args)
