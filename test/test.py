@@ -91,8 +91,10 @@ def test_prog():
     
     from rdf_engine.program import Program
     _ = Program.parse(s)
-    _.run()
+    _ = _.run()
+    return _
 
 
 if __name__ == '__main__':
-    test_prog()
+    _ = test_prog()
+    print(_)

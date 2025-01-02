@@ -3,7 +3,8 @@ execs:
   - params:
       MAX_NCYCLES: 5
       canon: True
-      deanon: False
+      deanon: True
+      deanon_uri: "urn:anon:"
       log: True
       log_print: True
     rules:
@@ -13,7 +14,7 @@ execs:
           n: 1
           rand: False
           graph: null # null, ~, or absence of value to interpret as None
-          anon: False
+          anon: True
           nested: False
   - params:
       MAX_NCYCLES: 5
