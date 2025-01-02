@@ -66,7 +66,8 @@ def test():
     rs = rules()
     logging()
     from rdf_engine import Engine
-    s = Engine(rules=rs, MAX_NCYCLES=5, canon=True, deanon=False ).run()
+    e = Engine(rules=rs, MAX_NCYCLES=5, canon=True, deanon=False )
+    s = e.run()
     print(len((s)))
     #assert(len(s) == sum(len(frozenset(r('_'))) for r in rules() )   )
     print(frozenset(t.graph_name for t in s))
@@ -79,11 +80,14 @@ def logging():
     logging.basicConfig(force=True) # force removes other loggers that got picked up.
     logger.setLevel(logging.INFO)
 
-
-
 def test_prog():
+    from pathlib import Path
+    db = 'db'
+    if Path(db).exists():
+        from shutil import rmtree
+        rmtree(db, )
     _ = {
-        'db': 'db',
+        'db': db,
         'execs': [
             {'params': {
                 'MAX_NCYCLES': 5,
@@ -93,20 +97,19 @@ def test_prog():
                  'log_print': True,
                  },
              'rules': [
-                 {
-                     'module': 'test.py', 'maker': 'Quads',
-                     'params': {'n': 1, 'rand': False, 'graph': None, 'anon': False, 'nested': False}
-                   }
+                {
+                    'module': 'test.py', 'maker': 'Quads',
+                    'params': {'n': 1, 'rand': False, 'graph': None, 'anon': False, 'nested': False}
+                }
              ]
             }
         ]
     }
     from rdf_engine.program import Program
     _ = Program.mk(_)
-    logging()
     _.run()
 
 
 if __name__ == '__main__':
-    logging()
+    from rdf_engine.program import Engine
     test_prog()

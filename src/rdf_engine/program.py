@@ -6,6 +6,8 @@ from typing import Callable
 from pathlib import Path
 
 def chkdct(d: dict, t: dict[str, type]):
+    for k in d: assert(k in t)
+    for k in t: assert(k in d)
     for tn,tt in t.items():
         try:
             if not isinstance(d[tn], tt):
@@ -48,18 +50,23 @@ class Engine:           # ✔️
         assert(isinstance(i, dict))
         args = cls.args
         if i['deanon'] == False: args.pop('deanon_uri')
+        if i['log'] == False: args.pop('log_print')
         chkdct(i,  args)
         from .engine import Engine
-        cls.log(i['log_print'])
+        if 'log_print' in i:
+            if i['log_print']:
+                cls.log(enable=True)
+        cls.log(enable=False)
         _ = Engine(**i)
         return _
     
-    def log(self, enable=True):
+    @classmethod
+    def log(cls, enable=True, level='INFO'):
+        if not enable: return
         from . import logger
         import logging
         logging.basicConfig(force=True) # force removes other loggers that got picked up.
-        logger.setLevel(logging.INFO)
-        if not enable: logger.disabled = True
+        logger.setLevel(getattr(logging, level))
 
 
 from dataclasses import dataclass
