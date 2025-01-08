@@ -91,7 +91,6 @@ def test_prog():
     from rdf_engine.program import Program
     _ = Program.parse(s)
     _ = _.run()
-    return _
 
 
 if __name__ == '__main__':
