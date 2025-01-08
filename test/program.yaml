@@ -2,9 +2,7 @@ db: db
 execs:
   - params:
       MAX_NCYCLES: 5
-      canon: True
-      deanon: True
-      deanon_uri: "urn:anon:"
+      derand: "urn:anon:"
       log: True
       log_print: True
     rules:
@@ -18,8 +16,7 @@ execs:
           nested: False
   - params:
       MAX_NCYCLES: 5
-      canon: True
-      deanon: False
+      derand: canonicalize
       log: True
       log_print: True
     rules:
