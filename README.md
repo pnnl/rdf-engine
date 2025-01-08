@@ -1,5 +1,6 @@
 ![PyPI - Status](https://img.shields.io/pypi/v/rdf-engine)
 
+
 # RDF-Engine
 
 ## Why?
@@ -24,6 +25,9 @@ and returns quads.
 However, if 
 
 ## Usage
+
+The package can be obtained from [PyPi](https://pypi.org/project/rdf-engine/).
+Note the CLI is optional: `rdf-engine[cli]`.
 
 A 'program' is defined as a sequence of engine runs
 initialized by a `db'.
