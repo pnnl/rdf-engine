@@ -66,12 +66,11 @@ def test():
     rs = rules()
     logging()
     from rdf_engine import Engine
-    e = Engine(rules=rs, MAX_NCYCLES=5, canon=True, deanon=False )
+    e = Engine(rules=rs, MAX_NCYCLES=5, derand='canonicalize')
     s = e.run()
     print(len((s)))
     #assert(len(s) == sum(len(frozenset(r('_'))) for r in rules() )   )
     print(frozenset(t.graph_name for t in s))
-
 
 
 def logging():

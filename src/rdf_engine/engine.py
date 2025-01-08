@@ -4,7 +4,8 @@ logger = logging.getLogger('engine')
 
 class Engine:
     from .rules import Rule
-    from typing import Iterable
+    from typing import Iterable, Literal
+    class DeanonPrefix(str): ...
     from pyoxigraph import Store
     from inspect import signature
     from .canon import quads
@@ -14,18 +15,35 @@ class Engine:
             MAX_NCYCLES: int=99,
         # safe settings to avoid inf cycling
         # but reduces performance
-            canon: bool=True,
-            deanon: bool=True, deanon_uri: str=signature(quads.deanon).parameters['uri'].default,
+        derand: Literal['canonicalize'] | DeanonPrefix | False  = signature(quads.deanon).parameters['uri'].default ,
         # typically expecting the engine to be used in a stand-alone program
-        # so it helps to have logging.
+        # so it helps to have log_print.
             log: bool=True, log_print: bool=False,
         ) -> None:
         self.rules = list(rules)
         self.db = db
+
         self.MAX_NCYCLES = MAX_NCYCLES
-        self.canon = True if deanon else canon
-        self.deanon = deanon
-        self.deanon_uri = deanon_uri
+
+        # derand --> (deanon, deanon_uri, canon)
+        canon = 'canonicalize'
+        if derand not in {canon, False}:
+            assert(isinstance(derand, str))
+        
+        if (derand == canon) or (isinstance(derand, str)):
+            self.canon = True
+        else:
+            self.canon = False
+        
+        if derand == canon:
+            self.deanon = False
+        elif derand == False:
+            self.deanon = False
+        else:
+            assert(isinstance(derand, str))
+            self.deanon = True
+            self.deanon_uri = derand
+
         self.i = 0
         
         # logging

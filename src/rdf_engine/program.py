@@ -54,16 +54,7 @@ class Engine:           # ✔️
         args = {k:v.annotation for k,v in cls.args().items()}
         # if                     then don't need these specified
         if i['log']     == False:   args.pop('log_print')
-        if i['deanon']  == False:   args.pop('deanon_uri')
-        if i['canon']   == False:   args.pop('deanon')
-        # need to do accounting for implict cases
-        # if (i['deanon']  == True) and ('canon' not in i):
-        #     i['canon'] = False
         chkdct(i,  args)
-        # will just check for conflicts instead.
-        # canon (T) =implies=> deanon (T)
-        if (i['deanon'] == True) and (i['canon'] == False):
-            raise ValueError(f'deanon=True and canon=False conflict.')
 
         from .engine import Engine
         if 'log_print' in i:
