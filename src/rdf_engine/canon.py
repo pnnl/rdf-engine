@@ -15,10 +15,17 @@ class _quads:
         # the set of quads have to be broken into sets of triples
         # after canonicalization,
         # each set of triples has to be reassembled as quads
-        quads = frozenset(quads)
-        for g in frozenset(q.graph_name for q in quads):
-            gtriples = tuple(q.triple for q in quads)
-        
+        from collections import defaultdict
+        g2t = defaultdict(set)
+        for q in quads: g2t[q.graph_name].add(q.triple)
+        from .data import reification
+        for g,ts in g2t.items():
+            _ = ts
+            _ = reification.standard(_)
+            _ = triples(_)
+            _ = reification.star(_)
+            _ = map(lambda t: Quad(*t, graph_name=g), _)
+            yield from _
 
     class _deanon:
         from pyoxigraph import Triple
