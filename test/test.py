@@ -2,7 +2,7 @@
 def quads(n=1, *,
             rand=False, anon=False,
             graph=None,
-            nested='',):
+            nested=False,):
     from pyoxigraph import Quad, Triple
     from pyoxigraph import BlankNode, NamedNode
 
@@ -25,7 +25,8 @@ def quads(n=1, *,
     
     for i in range(n):
         if nested:
-            _ = Triple(triple(), NamedNode(f'm:{nested}'), triple(),)
+            _ = triple()
+            _ = Triple(triple(), _.predicate, _.object)
         else:
             _ = triple()
         yield Quad(*_,  NamedNode(f'g:{graph}') if graph else None)
@@ -52,7 +53,7 @@ def args():
     class anon(list): ...
     anon = anon([ True])
     class nested(list): ...
-    nested = nested(['meta', False ])
+    nested = nested([True, False ])
     class rand(list): ...
     rand = rand([False])
 

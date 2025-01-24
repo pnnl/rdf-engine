@@ -16,7 +16,8 @@ dependencies = [
 cli = ['pyyaml']
 [dependency-groups]
 dev = [
-    'ipython', 'ipdb',
+    'ipython', 'ipdb', 
+    'marimo',
     'pytest',
     'pre-commit',
     'fire',

@@ -2,9 +2,12 @@
 canonicalization
 """
 
+
 class _quads:
-    from pyoxigraph import Quad
+    from pyoxigraph import Quad, Triple, NamedNode
     from typing import Iterable
+
+
     def __call__(self, quads: Iterable[Quad]) -> Iterable[Quad]:
         """
         canonicalization of sets of quads
@@ -12,33 +15,20 @@ class _quads:
         # the set of quads have to be broken into sets of triples
         # after canonicalization,
         # each set of triples has to be reassembled as quads
-        from  pyoxigraph import BlankNode
-        from .data import index
-        for i,itriples in index(quads).items():
-            if isinstance(i.graph, BlankNode):
-                raise ValueError(f'not handling graph blank/anon node of graph {i.graph}')
-            if not i.outerpredicate:
-                c = triples(itriples)
-                yield from (self.Quad(*t, i.graph) for t in c)
-            else:
-                assert(i.outerpredicate)
-                # separately to keep computations down.
-                # assumption: the nested triple terms are not related anonymously
-                cs = triples(t.subject  for t in itriples)
-                assert(len(itriples))
-                co = triples(t.object   for t in itriples)
-                assert(len(cs) == len(co))
-                for s in cs:
-                    for o in co:
-                        yield self.Quad(s, i.outerpredicate, o, i.graph)
+        quads = frozenset(quads)
+        for g in frozenset(q.graph_name for q in quads):
+            gtriples = tuple(q.triple for q in quads)
+        
 
     class _deanon:
         from pyoxigraph import Triple
         from typing import Iterable
         from pyoxigraph import Quad
+        class defaults:
+            uri = "urn:anon:hash:"
         def __call__(slf,
                 quads: Iterable[Quad], *,
-                uri = "urn:anon:hash:") -> Iterable[Quad]:
+                uri = defaults.uri) -> Iterable[Quad]:
             """takes blank node value as an identifier for a uri"""
             _ = map(lambda q: slf.quad(q, uri), quads)
             return _
