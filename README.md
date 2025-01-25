@@ -10,8 +10,8 @@ where the conversion from BIM to RDF is framed as 'mapping rules'.
 
 ## How?
 
-Rules are processes that generate triples.
-They are simply applied until no _new_ triples are produced.
+Rules are processes that generate quads.
+They are simply applied until no _new_ quads are produced.
 [Oxigraph](https://github.com/oxigraph/oxigraph) is used to store data.
 
 A rule is defined as a function that takes an Oxigraph instance
