@@ -1,5 +1,6 @@
 import logging # :( i dont do module level imports
-logger = logging.getLogger('engine')
+logger = logging.getLogger(__name__)
+del logging
 
 
 class Engine:
