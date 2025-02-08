@@ -16,7 +16,7 @@ class Engine:
             MAX_NCYCLES: int=99,
         # safe settings to avoid inf cycling
         # but reduces performance
-        derand: Literal['canonicalize'] | DeanonPrefix | False  = signature(quads.deanon).parameters['uri'].default ,
+        derand: Literal['canonicalize'] | DeanonPrefix | Literal[False]  = signature(quads.deanon).parameters['uri'].default,
         # typically expecting the engine to be used in a stand-alone program
         # so it helps to have log_print.
             log: bool=True, log_print: bool=False,
@@ -63,41 +63,48 @@ class Engine:
                 line = '-'*10
                 logger.info(f"CYCLE {self.i} {line}")
 
-        for r in self.rules: # TODO: could be parallelized
-            # before
-            if hasattr(self, 'logging'):
-                before = len(self.db)
-                if self.logging.print:
-                    logger.info(f"{repr(r)}")
-                from time import monotonic
-                start_time = monotonic()
+        def rules_trigger():
+            for r in self.rules: # TODO: could be parallelized
+                # before
+                if hasattr(self, 'logging'):
+                    if self.logging.print:
+                        logger.info(f"{repr(r)}")
+                    from time import monotonic
+                    start_time = monotonic()
+                # do
+                _ = r(self.db)
+                _ = tuple(_)
+                # after
+                if hasattr(self, 'logging'):
+                    self.logging.log[r].append(len(_))
+                    if self.logging.print:
+                        logger.info(f"generated {len(_)} quads in {'{0:.2f}'.format(monotonic()-start_time)} seconds")
+                yield _
 
-            # do
-            _ = r(self.db)
+        def process(qs):
+            _ = qs
             if self.canon:
+                # have to keep it per rule firing. bc too much data potentially.
                 from .data import quads
                 _ = quads(_)
                 from .canon import quads
                 _ = quads(_)
                 if self.deanon:
                     _ = quads.deanon(_, uri=self.deanon_uri)
-            from .db import ingest
+            yield from _
+
+        from .db import ingest
+        for _ in rules_trigger():
+            _ = process(_)
             # so if a rule returns a string,
             # it /could/ go in fast in the case of no processing (canon/deanon)
             ingest(self.db, _, flush=True)
-            del _
-
-            # after
-            if hasattr(self, 'logging'):
-                delta = self.logging.delta(before, len(self.db))
-                self.logging.log[r].append(delta)
-                if self.logging.print:
-                    logger.info(f"# triples before {delta.before }, after {delta.after } => {delta.after-delta.before}.")
-                    logger.info(f"took {'{0:.2f}'.format(monotonic()-start_time)} seconds")
-        
+        del _
         self.i += 1
         self.db.flush()
         self.db.optimize()
+        if hasattr(self, 'logging'):
+            logger.info(f'db has {len(self.db)} quads')
         return self.db
 
     def stop(self) -> bool:
