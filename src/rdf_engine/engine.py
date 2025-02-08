@@ -50,12 +50,12 @@ class Engine:
         
         # logging
         if log:
-            from collections import defaultdict, namedtuple
+            from collections import namedtuple
             from types import SimpleNamespace as NS
             self.logging = NS(
                 print = log_print,
-                log = defaultdict(list),
-                delta = namedtuple('delta', ['before', 'after'] ))
+                log = [],
+                state = namedtuple('state', ['cycle', 'stored', 'rule', 'new', 'time'] ))
         self.debug = debug
 
     # TODO: make a method for applying one rule
@@ -96,9 +96,16 @@ class Engine:
             ingest(self.db, _, flush=True)
             # after
             if hasattr(self, 'logging'):
-                self.logging.log[r].append(self.logging.delta(before=nquads, after=len(self.db)))
+                self.logging.log.append(self.logging.state(
+                    cycle=self.i,
+                    stored=nquads,
+                    rule=r,
+                    new=len(self.db)-nquads,
+                    time=float('{0:.2f}'.format(monotonic()-start_time))))
                 if self.logging.print:
-                    logger.info(f"    {self.logging.log[r][-1].after-self.logging.log[r][-1].before} new quads in {'{0:.2f}'.format(monotonic()-start_time)} seconds")
+                    s = self.logging.log[-1]
+                    logger.info('   '+f"{s.new} quads in {s.time}s"  )
+                    del s
             # so if a rule returns a string,
             # it /could/ go in fast in the case of no processing (canon/deanon)
             del _
