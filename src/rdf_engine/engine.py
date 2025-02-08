@@ -20,6 +20,7 @@ class Engine:
         # typically expecting the engine to be used in a stand-alone program
         # so it helps to have log_print.
             log: bool=True, log_print: bool=False,
+            debug: bool = False,
         ) -> None:
         self.rules = list(rules)
         self.db = db
@@ -55,6 +56,7 @@ class Engine:
                 print = log_print,
                 log = defaultdict(list),
                 delta = namedtuple('delta', ['before', 'after'] ))
+        self.debug = debug
 
     # TODO: make a method for applying one rule
     def run1(self) -> Store:
@@ -96,6 +98,9 @@ class Engine:
         from .db import ingest
         for _ in rules_trigger():
             _ = process(_)
+            if self.debug:
+                _ = tuple(_)
+                for q in _: logger.debug(f"{q}")
             # so if a rule returns a string,
             # it /could/ go in fast in the case of no processing (canon/deanon)
             ingest(self.db, _, flush=True)
