@@ -99,8 +99,9 @@ class Engine:
         for _ in rules_trigger():
             _ = process(_)
             if self.debug:
-                _ = tuple(_)
-                for q in _: logger.debug(f"{q}")
+                if self.logging.print:
+                    _ = tuple(_)
+                    for q in _: logger.debug(f"{q}")
             # so if a rule returns a string,
             # it /could/ go in fast in the case of no processing (canon/deanon)
             ingest(self.db, _, flush=True)
@@ -109,7 +110,8 @@ class Engine:
         self.db.flush()
         self.db.optimize()
         if hasattr(self, 'logging'):
-            logger.info(f'db has {len(self.db)} quads')
+            if self.logging.print:
+                logger.info(f'db has {len(self.db)} quads')
         return self.db
 
     def stop(self) -> bool:
@@ -124,9 +126,8 @@ class Engine:
     def __iter__(self) -> Iterable[Store]:
         while (not self.stop()):
             if self.i >= self.MAX_NCYCLES:
-                if hasattr(self, 'logging'):
-                    if self.logging.print:
-                        logger.warning('reached max cycles')
+                from warnings import warn
+                warn('reached max cycles')
                 break
             yield self.db
         else: # for case when nothing needs to happen
