@@ -82,7 +82,7 @@ class Engine:
             # before
             if hasattr(self, 'logging'):
                 if self.logging.print:
-                    logger.info(f"{repr(r)}")
+                    logger.info(f"  {repr(r)}")
                 from time import monotonic
                 start_time = monotonic()
                 nquads = len(self.db)
@@ -98,7 +98,7 @@ class Engine:
             if hasattr(self, 'logging'):
                 self.logging.log[r].append(self.logging.delta(before=nquads, after=len(self.db)))
                 if self.logging.print:
-                    logger.info(f"generated {self.logging.log[r][-1].after-self.logging.log[r][-1].before} new quads in {'{0:.2f}'.format(monotonic()-start_time)} seconds")
+                    logger.info(f"    {self.logging.log[r][-1].after-self.logging.log[r][-1].before} new quads in {'{0:.2f}'.format(monotonic()-start_time)} seconds")
             # so if a rule returns a string,
             # it /could/ go in fast in the case of no processing (canon/deanon)
             del _
