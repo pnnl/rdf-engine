@@ -104,7 +104,8 @@ class Engine:
                     time=float('{0:.2f}'.format(monotonic()-start_time))))
                 if self.logging.print:
                     s = self.logging.log[-1]
-                    logger.info('   '+f"{s.new} quads in {s.time}s"  )
+                    width = 6
+                    logger.info('   '+f"{s.new:<{width}} quads in {s.time}s"  )
                     del s
             # so if a rule returns a string,
             # it /could/ go in fast in the case of no processing (canon/deanon)
