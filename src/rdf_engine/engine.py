@@ -65,24 +65,6 @@ class Engine:
                 line = '-'*10
                 logger.info(f"CYCLE {self.i} {line}")
 
-        def rules_trigger():
-            for r in self.rules: # TODO: could be parallelized
-                # before
-                if hasattr(self, 'logging'):
-                    if self.logging.print:
-                        logger.info(f"{repr(r)}")
-                    from time import monotonic
-                    start_time = monotonic()
-                # do
-                _ = r(self.db)
-                _ = tuple(_)
-                # after
-                if hasattr(self, 'logging'):
-                    self.logging.log[r].append(len(_))
-                    if self.logging.print:
-                        logger.info(f"generated {len(_)} quads in {'{0:.2f}'.format(monotonic()-start_time)} seconds")
-                yield _
-
         def process(qs):
             _ = qs
             if self.canon:
@@ -96,15 +78,29 @@ class Engine:
             yield from _
 
         from .db import ingest
-        for _ in rules_trigger():
+        for r in self.rules: # TODO: could be parallelized:
+            # before
+            if hasattr(self, 'logging'):
+                if self.logging.print:
+                    logger.info(f"{repr(r)}")
+                from time import monotonic
+                start_time = monotonic()
+                nquads = len(self.db)
+            # do
+            _ = r(self.db)
             _ = process(_)
             if self.debug:
                 if self.logging.print:
                     _ = tuple(_)
                     for q in _: logger.debug(f"{q}")
+            ingest(self.db, _, flush=True)
+            # after
+            if hasattr(self, 'logging'):
+                self.logging.log[r].append(self.logging.delta(before=nquads, after=len(self.db)))
+                if self.logging.print:
+                    logger.info(f"generated {self.logging.log[r][-1].after-self.logging.log[r][-1].before} new quads in {'{0:.2f}'.format(monotonic()-start_time)} seconds")
             # so if a rule returns a string,
             # it /could/ go in fast in the case of no processing (canon/deanon)
-            ingest(self.db, _, flush=True)
             del _
         self.i += 1
         self.db.flush()
