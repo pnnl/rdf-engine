@@ -99,7 +99,7 @@ class Engine:
             # so if a rule returns a string,
             # it /could/ go in fast in the case of no processing (canon/deanon)
             ingest(self.db, _, flush=True)
-        del _
+            del _
         self.i += 1
         self.db.flush()
         self.db.optimize()
