@@ -78,7 +78,7 @@ class Engine:
             yield from _
 
         from .db import ingest
-        for r in self.rules: # TODO: could be parallelized:
+        for ir, r in enumerate(self.rules): # TODO: could be parallelized:
             # before
             if hasattr(self, 'logging'):
                 if self.logging.print:
@@ -105,8 +105,9 @@ class Engine:
                 if self.logging.print:
                     s = self.logging.log[-1]
                     width = 6
-                    logger.info('   '+f"{s.new:<{width}} quads in {s.time}s"  )
-                    del s
+                    qi = 'quads in'
+                    logger.info('   '+f"{s.new:<{width}} {qi if ir==0 else ' '*len(qi)} {s.time}s"  )
+                    del s, width, qi
             # so if a rule returns a string,
             # it /could/ go in fast in the case of no processing (canon/deanon)
             del _
