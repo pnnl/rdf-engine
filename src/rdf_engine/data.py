@@ -1,7 +1,7 @@
 
 class _reification:
     from typing import Iterable
-    from pyoxigraph import Triple, NamedNode
+    from pyoxigraph import Triple, BlankNode
     class terms:
         prefix = "http://www.w3.org/1999/02/22-rdf-syntax-ns#"
         terms = {'Statement', 'type',
@@ -23,8 +23,7 @@ class _reification:
             else: # nested data triple
                 ndt = t.subject
                 assert(not  isinstance(t.object,  T))
-                #                                  make positive...
-                id = self.terms.nn("urn:meta:id:", abs(hash(t))) 
+                id = self.BlankNode()
                 # ...probably wont make use of the number (specifically)
                 yield T(id, trm.type,       trm.Statement)
                 yield T(id, trm.subject,    ndt.subject)
