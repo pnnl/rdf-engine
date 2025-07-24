@@ -15,6 +15,8 @@ class _reification:
             return NamedNode(f"{prefix}{term}")
     terms = terms()
     def standard(self, str: Iterable[Triple]) -> Iterable[Triple]:
+        from .canon import quads
+        uri = quads.deanon.defaults.uri
         T = self.Triple
         trm = self.terms
         for t in str:
@@ -23,7 +25,9 @@ class _reification:
             else: # nested data triple
                 ndt = t.subject
                 assert(not  isinstance(t.object,  T))
-                id = self.BlankNode()
+                id = hash(ndt)
+                id = abs(id)
+                id = self.terms.nn(uri, id)
                 # ...probably wont make use of the number (specifically)
                 yield T(id, trm.type,       trm.Statement)
                 yield T(id, trm.subject,    ndt.subject)

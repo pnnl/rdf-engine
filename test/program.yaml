@@ -5,6 +5,7 @@ execs:
       derand: "urn:anon:"
       log: True
       log_print: True
+      debug: False
     rules:
       - module: test.py
         maker: Quads
@@ -19,6 +20,7 @@ execs:
       derand: canonicalize
       log: True
       log_print: True
+      debug: False
     rules:
       - module: test.py
         maker: Quads
