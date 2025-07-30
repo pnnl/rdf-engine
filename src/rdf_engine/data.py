@@ -25,9 +25,12 @@ class _reification:
             else: # nested data triple
                 ndt = t.subject
                 assert(not  isinstance(t.object,  T))
-                id = hash(ndt)
-                id = abs(id)
-                id = self.terms.nn(uri, id)
+                if isinstance(ndt.subject, self.BlankNode) or isinstance(ndt.object, self.BlankNode):
+                    id = self.BlankNode()
+                else: # deterministic. reduce blank nodes in output
+                    id = hash(ndt)
+                    id = abs(id)
+                    id = self.terms.nn(uri, id)
                 # ...probably wont make use of the number (specifically)
                 yield T(id, trm.type,       trm.Statement)
                 yield T(id, trm.subject,    ndt.subject)
