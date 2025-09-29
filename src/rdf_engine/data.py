@@ -4,7 +4,7 @@ class _reification:
     from pyoxigraph import Triple, BlankNode
     class terms:
         prefix = "http://www.w3.org/1999/02/22-rdf-syntax-ns#"
-        terms = {'Statement', 'type',
+        terms = {'Statement', 'type', 'reifies',
                  'subject', 'predicate', 'object'}
         def __init__(self):
             for t in self.terms:
@@ -14,30 +14,55 @@ class _reification:
             from pyoxigraph import NamedNode
             return NamedNode(f"{prefix}{term}")
     terms = terms()
-    def standard(self, str: Iterable[Triple]) -> Iterable[Triple]:
+    def standard(self, str: Iterable[Triple], deterministic_nested=True) -> Iterable[Triple]:
         from .canon import quads
         uri = quads.deanon.defaults.uri
         T = self.Triple
         trm = self.terms
+        old2new = {}
+        str = frozenset(str)  # need two passes for deterministic_nested case
+
+        def isnested(t):
+            # nested/reifying  triple https://www.w3.org/TR/rdf12-concepts/#dfn-reifying-triple
+            return (t.predicate == trm.reifies) and isinstance(t.object, T)
         for t in str:
-            if not isinstance(t.subject, T):
-                yield t
-            else: # nested data triple
-                ndt = t.subject
-                assert(not  isinstance(t.object,  T))
-                if isinstance(ndt.subject, self.BlankNode) or isinstance(ndt.object, self.BlankNode):
-                    id = self.BlankNode()
-                else: # deterministic. reduce blank nodes in output
+            if isnested(t):
+                ndt = t.object                            # always  here
+                assert(not isinstance(t.subject, T))      # but not here
+                # https://github.com/oxigraph/oxigraph/issues/1286
+                # <<d:s d:p d:o>> m:p m:o .
+                # <<d:s d:p d:o>> m:p2 m:o2 .
+                # # not the same as
+                # <<d:s d:p d:o>> m:p m:o; m:p2 m:o2 .
+                # doesn't make sense for rdf-engine
+                # deterministic. reduce blank nodes in output
+                id = t.subject
+                if deterministic_nested:
+                    old = id
                     id = hash(ndt)
                     id = abs(id)
                     id = self.terms.nn(uri, id)
-                # ...probably wont make use of the number (specifically)
+                    new = id
+                else:
+                    id = t.subject
+                    old = new = id
+                old2new[old] = new
+                    
                 yield T(id, trm.type,       trm.Statement)
                 yield T(id, trm.subject,    ndt.subject)
                 yield T(id, trm.predicate,  ndt.predicate)
                 yield T(id, trm.object,     ndt.object)
                 # meta
                 yield T(id, t.predicate,    t.object)
+
+        for t in str:    
+            # it's not
+            if not isnested(t):
+                if t.subject in old2new:
+                    t = T(old2new[t.subject], t.predicate, t.object)
+                if t.object in old2new:
+                    t = T(t.subject, t.predicate, old2new[t.object])
+                yield t
     # :man :hasSpouse :woman .
     # :id1 rdf:type rdf:Statement ;
         # rdf:subject :man ;
