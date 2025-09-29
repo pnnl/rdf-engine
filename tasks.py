@@ -6,15 +6,16 @@ def get_rev():
 rev = get_rev()
 
 
-def build(commit=False):
+def build(update=True, commit=False, ):
     def run(cmd, *p, **k):
         from subprocess import check_call as run
         from pathlib import Path
         return run(cmd, *p, cwd=Path(__file__).parent, **k)
-    if commit:
+    if update:
         run(f'uvx hatchling version {ncommits()+1}', )
         run(f'uv lock --upgrade-package {pkg}', )
         # https://github.com/pre-commit/pre-commit/issues/747#issuecomment-386782080
+    if commit:
         run('git add -u', )
     run('uv build')
 
