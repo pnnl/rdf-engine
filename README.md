@@ -23,8 +23,6 @@ and returns quads.
 * Handling of anonymous/blank nodes: They can be derandomized.
 * Oxigraph can handle RDF-star data and querying.
 However, RDF-star is derandomized for each graph in a rule.
-RDF-star data is expected to be of form
-`<<data.subject data.predicate data.object >> meta.predicate meta.object`.
 
 ## Usage
 

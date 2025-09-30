@@ -41,9 +41,6 @@ class _quads:
             return _
         @classmethod
         def quad(cls, q: Quad, uri):
-            if isinstance(q.subject, cls.Triple):
-                _ = cls.Triple(*(cls.f(n, uri) for n in q.subject))
-                q = cls.Quad(_, q.predicate, q.object, q.graph_name)
             if isinstance(q.object, cls.Triple):
                 _ = cls.Triple(*(cls.f(n, uri) for n in q.object))
                 q = cls.Quad(q.subject, q.predicate, _, q.graph_name)
@@ -77,7 +74,6 @@ def triples(ts):
     assert(isinstance(ts, frozenset))
     from pyoxigraph import Triple
     for t in ts:
-        assert(not isinstance(t.subject,    Triple))
         assert(not isinstance(t.object,     Triple))
     # optimization
     if not hasanon(ts):

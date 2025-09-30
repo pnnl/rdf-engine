@@ -52,17 +52,18 @@ class _reification:
                 yield T(id, trm.subject,    ndt.subject)
                 yield T(id, trm.predicate,  ndt.predicate)
                 yield T(id, trm.object,     ndt.object)
-                # meta
-                yield T(id, t.predicate,    t.object)
+                # meta       t.reifies
+                #yield T(id, t.predicate,    t.object)
+                # meta in below loop
 
-        for t in str:    
-            # it's not
+        for t in str:
             if not isnested(t):
                 if t.subject in old2new:
                     t = T(old2new[t.subject], t.predicate, t.object)
                 if t.object in old2new:
                     t = T(t.subject, t.predicate, old2new[t.object])
                 yield t
+                
     # :man :hasSpouse :woman .
     # :id1 rdf:type rdf:Statement ;
         # rdf:subject :man ;
@@ -73,35 +74,49 @@ class _reification:
     class query:
         # https://www.ontotext.com/knowledgehub/fundamentals/what-is-rdf-star/
         class parts:
-            std = """
+            rei = """
             ?reification a rdf:Statement .
             ?reification rdf:subject ?subject .
             ?reification rdf:predicate ?predicate .
             ?reification rdf:object ?object .
-            ?reification ?p ?o .
+            """
+            left =  "?reification ?p ?o."
+            right = "?s ?p ?reification."
+            reil = rei + left
+            reir = rei + right
+            union = f"""
+            {rei}
+            {{{left}}} union {{{right}}}
             """
         std2str = """
         PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
         CONSTRUCT {
-            <<?subject ?predicate ?object>> ?p ?o .
+            #<<?subject ?predicate ?object>> ?p ?o .
+            #?s ?p <<?subject ?predicate ?object>> .
+            ?reification rdf:reifies <<(?subject ?predicate ?object)>>. # tricky!!
+            side
         } WHERE {
-            parts.std
+            part
             FILTER (?p NOT IN (rdf:subject, rdf:predicate, rdf:object) &&
             (?p != rdf:type && ?object != rdf:Statement))
         }
         """
-        std2str = std2str.replace('parts.std', parts.std)
-        delstd = """
+        std2strl = std2str.replace('part', parts.reil).replace('side', parts.left)
+        std2strr = std2str.replace('part', parts.reir).replace('side', parts.right)
+        delrei = """
         PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
-        DELETE where { parts.std }
+        DELETE where  { part }
         """
-        delstd = delstd.replace('parts.std', parts.std)
-    def star(self, std: Iterable[Triple]) -> Iterable[Triple]:
+        delreil = delrei.replace('part', parts.reil)
+        delreir = delrei.replace('part', parts.reir)
+    def star(self, std: Iterable[Triple],) -> Iterable[Triple]:
         from pyoxigraph import Store, Quad
         s = Store()
         s.bulk_extend(Quad(*t) for t in std)
-        yield from s.query( self.query.std2str)
-        s.update(           self.query.delstd)   # delete std
+        yield from s.query( self.query.std2strl)
+        yield from s.query( self.query.std2strr)
+        s.update(           self.query.delreil)
+        s.update(           self.query.delreir)
         #                             the 'regular' ones
         yield from s.query("construct {?s ?p ?o} where {?s ?p ?o.}")
 
