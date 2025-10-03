@@ -29,7 +29,7 @@ def quads(n=1, *,
             predicate = NamedNode('http://www.w3.org/1999/02/22-rdf-syntax-ns#reifies')
             # https://github.com/oxigraph/oxigraph/issues/1472
             _ = Triple(_.subject, predicate, triple())
-            #_ = Triple(_.subject, _.predicate, triple())
+            #_ = Triple(_.subject, _.predicate, triple()) # not handled
         else:
             _ = triple()
         yield Quad(*_,  NamedNode(f'g:{graph}') if graph else None)

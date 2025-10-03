@@ -23,8 +23,14 @@ class _reification:
         str = frozenset(str)  # need two passes for deterministic_nested case
 
         def isnested(t):
-            # nested/reifying  triple https://www.w3.org/TR/rdf12-concepts/#dfn-reifying-triple
-            return (t.predicate == trm.reifies) and isinstance(t.object, T)
+            if isinstance(t.object, T):
+                # nested/reifying  triple https://www.w3.org/TR/rdf12-concepts/#dfn-reifying-triple
+                if (t.predicate == trm.reifies):
+                    return True
+                else:
+                    raise ValueError('(subject, not rdf:reifies, triple) not handled')
+            else:
+                return False
         for t in str:
             if isnested(t):
                 ndt = t.object                            # always  here

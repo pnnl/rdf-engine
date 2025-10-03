@@ -23,6 +23,8 @@ and returns quads.
 * Handling of anonymous/blank nodes: They can be derandomized.
 * Oxigraph can handle RDF-star data and querying.
 However, RDF-star is derandomized for each graph in a rule.
+In addition, rdf_engine does not handle nested triples of form
+`(subject, not rdf:refies, triple)`.
 
 ## Usage
 
