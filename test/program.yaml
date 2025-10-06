@@ -3,9 +3,9 @@ execs:
   - params:
       MAX_NCYCLES: 5
       derand: "urn:anon:"
-      log: True
+      log_data: True
       log_print: True
-      debug: False
+      log_debug: False
     rules:
       - module: test.py
         maker: Quads
@@ -18,9 +18,9 @@ execs:
   - params:
       MAX_NCYCLES: 5
       derand: canonicalize
-      log: True
       log_print: True
-      debug: False
+      log_data: False
+      log_debug: False
     rules:
       - module: test.py
         maker: Quads

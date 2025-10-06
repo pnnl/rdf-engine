@@ -1,7 +1,4 @@
-import logging # :( i dont do module level imports
-logger = logging.getLogger(__name__)
-del logging
-
+from loguru import logger
 
 class Engine:
     from .rules import Rule
@@ -17,10 +14,7 @@ class Engine:
         # safe settings to avoid inf cycling
         # but reduces performance
         derand: Literal['canonicalize'] | DeanonPrefix | Literal[False]  = signature(quads.deanon).parameters['uri'].default,
-        # typically expecting the engine to be used in a stand-alone program
-        # so it helps to have log_print.
-            log: bool=True, log_print: bool=False,
-            debug: bool = False,
+            log_data: bool=True, log_print: bool=True, log_debug: bool=False
         ) -> None:
         self.rules = list(rules)
         self.db = db
@@ -49,21 +43,23 @@ class Engine:
         self.i = 0
         
         # logging
-        if log:
-            from collections import namedtuple
-            from types import SimpleNamespace as NS
-            self.logging = NS(
-                print = log_print,
-                log = [],
-                state = namedtuple('state', ['cycle', 'stored', 'rule', 'new', 'time'] ))
-        self.debug = debug
+        from collections import namedtuple
+        from types import SimpleNamespace as NS
+        from sys import stderr
+        logger.remove()
+        if log_print: logger.add(stderr, format="{message}", level='INFO' )
+        if log_debug: logger.add(stderr, level='DEBUG')
+        self.logging = NS(
+            print = True if log_print else False,
+            data =   []  if log_data  else False,
+            debug = log_debug,
+            state = namedtuple('state', ['cycle', 'stored', 'rule', 'new', 'time'] ))
 
     # TODO: make a method for applying one rule
     def run1(self) -> Store:
-        if hasattr(self, 'logging'):
-            if self.logging.print:
-                line = '-'*10
-                logger.info(f"CYCLE {self.i} {line}")
+        if self.logging.print:
+            line = '-'*10
+            logger.info(f"CYCLE {self.i} {line}")
 
         def process(qs):
             _ = qs
@@ -80,30 +76,29 @@ class Engine:
         from .db import ingest
         for ir, r in enumerate(self.rules): # TODO: could be parallelized:
             # before
-            if hasattr(self, 'logging'):
-                if self.logging.print:
-                    logger.info(f"  {repr(r)}")
+            if self.logging.print:
+                logger.info(f"  {repr(r)}")
+            if self.logging.data is not False:
                 from time import monotonic
                 start_time = monotonic()
                 nquads = len(self.db)
             # do
             _ = r(self.db)
             _ = process(_)
-            if self.debug:
-                if self.logging.print:
-                    _ = tuple(_)
-                    for q in _: logger.debug(f"{q}")
+            if self.logging.debug:
+                _ = tuple(_)
+                for q in _: logger.debug(f"{q}")
             ingest(self.db, _, flush=True)
             # after
-            if hasattr(self, 'logging'):
-                self.logging.log.append(self.logging.state(
+            if self.logging.data is not False:
+                self.logging.data.append(self.logging.state(
                     cycle=self.i,
                     stored=nquads,
                     rule=r,
                     new=len(self.db)-nquads,
                     time=float('{0:.2f}'.format(monotonic()-start_time))))
                 if self.logging.print:
-                    s = self.logging.log[-1]
+                    s = self.logging.data[-1]
                     width = 6
                     qi = 'quads in'
                     logger.info('   '+f"{s.new:<{width}} {qi if ir==0 else ' '*len(qi)} {s.time}s"  )
@@ -114,9 +109,8 @@ class Engine:
         self.i += 1
         self.db.flush()
         self.db.optimize()
-        if hasattr(self, 'logging'):
-            if self.logging.print:
-                logger.info(f'db has {len(self.db)} quads')
+        if self.logging.print:
+            logger.info(f'db has {len(self.db)} quads')
         return self.db
 
     def stop(self) -> bool:

@@ -68,20 +68,13 @@ def rules():
 
 def test():
     rs = rules()
-    logging()
     from rdf_engine import Engine
-    e = Engine(rules=rs, MAX_NCYCLES=5, derand='canonicalize')
+    e = Engine(rules=rs, MAX_NCYCLES=5, derand='canonicalize',)
     s = e.run()
     print(len((s)))
     #assert(len(s) == sum(len(frozenset(r('_'))) for r in rules() )   )
     print(frozenset(t.graph_name for t in s))
 
-
-def logging():
-    from rdf_engine import logger
-    import logging
-    logging.basicConfig(force=True) # force removes other loggers that got picked up.
-    logger.setLevel(logging.INFO)
 
 def test_prog():
     from pathlib import Path

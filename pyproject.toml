@@ -11,6 +11,7 @@ requires-python = ">=3.11"
 dependencies = [
     "pyoxigraph",
     "rdflib", # just for 'deanon', otherwise dont want this
+    'loguru',
     ]
 [project.optional-dependencies]
 cli = ['pyyaml']

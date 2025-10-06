@@ -1,15 +1,14 @@
 """
 takes a program spec for execution
 """
-
 from typing import Callable
 from pathlib import Path
 
 def chkdct(d: dict, t: dict[str, type]):
     for k in d:
-        if k not in t: raise ValueError(f'{k} not in {t.keys()}')
+        if k not in t: raise ValueError(f'{k} not in {t.keys()}. Did you specify it?')
     for k in t:
-        if k not in d: raise ValueError(f'{k} not in {d.keys()}')
+        if k not in d: raise ValueError(f'{k} not in {d.keys()}. Did you specify it?')
     for tn,tt in t.items():
         try:
             if not isinstance(d[tn], tt):
@@ -52,26 +51,11 @@ class Engine:           # ✔️
     def mk(cls, i: dict):
         assert(isinstance(i, dict))
         args = {k:v.annotation for k,v in cls.args().items()}
-        # if                     then don't need these specified
-        if i['log']     == False:   args.pop('log_print')
         chkdct(i,  args)
-
         from .engine import Engine
-        if 'log_print' in i:
-            if i['log_print']:
-                cls.log(enable=True)
-        cls.log(enable=False)
         _ = Engine(**i)
         return _
     
-    @classmethod
-    def log(cls, enable=True, level='INFO'):
-        if not enable: return
-        from . import logger
-        import logging
-        logging.basicConfig(force=True) # force removes other loggers that got picked up.
-        logger.setLevel(getattr(logging, level))
-
 
 from dataclasses import dataclass
 @dataclass
