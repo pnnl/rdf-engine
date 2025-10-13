@@ -653,7 +653,7 @@ dev = [
 [package.metadata]
 requires-dist = [
     { name = "loguru" },
-    { name = "pyoxigraph" },
+    { name = "pyoxigraph", specifier = ">=0.5.0" },
     { name = "pyyaml", marker = "extra == 'cli'" },
     { name = "rdflib" },
 ]

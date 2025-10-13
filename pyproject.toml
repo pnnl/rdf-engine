@@ -9,7 +9,7 @@ authors = [
 readme = "README.md"
 requires-python = ">=3.11"
 dependencies = [
-    "pyoxigraph",
+    "pyoxigraph>=0.5.0",
     "rdflib", # just for 'deanon', otherwise dont want this
     'loguru',
     ]
