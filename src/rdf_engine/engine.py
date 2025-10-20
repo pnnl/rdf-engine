@@ -13,7 +13,7 @@ class Engine:
             MAX_NCYCLES: int=99,
         # safe settings to avoid inf cycling
         # but reduces performance
-        derand: Literal['canonicalize'] | DeanonPrefix | Literal[False]  = signature(quads.deanon).parameters['uri'].default,
+        derand: Literal['canonicalize'] | DeanonPrefix | Literal[False]  = 'canonicalize', #signature(quads.deanon).parameters['uri'].default,
             log_data: bool=True, log_print: bool=True, log_debug: bool=False
         ) -> None:
         self.rules = list(rules)

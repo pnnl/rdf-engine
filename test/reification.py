@@ -25,8 +25,9 @@ def _():
 
     #<<d:s d:p x:o>> m:p m:o .
     # https://github.com/oxigraph/oxigraph/issues/1286
-    <<d:s d:p d:o>> m:p m:o .
-    <<d:s d:p d:o>> m:p2 m:o2 .
+    <<_:s d:p _:o>> m:p m:o .
+    #<<d:s d:p d:o>> m:p m:o .
+    #<<d:s d:p d:o>> m:p2 m:o2 .
     # not the same as
     #<<d:s d:p d:o>> m:p m:o; m:p2 m:o2 .
 
@@ -54,6 +55,8 @@ def _(d, std):
     star = list(frozenset(star))
     star
     return
+
+
 
 
 if __name__ == "__main__":

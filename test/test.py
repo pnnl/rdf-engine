@@ -15,7 +15,9 @@ def quads(n=1, *,
     def triple():
         p = NamedNode(ps(rand))
         if anon:
-            _ = Triple(BlankNode(), p, BlankNode())
+            #_ = Triple(BlankNode(), p, p )  
+            #_ = Triple(p, p, BlankNode(),) 
+            _ = Triple(BlankNode(), p, BlankNode(),) # 
         else:
             if rand:
                 _ = Triple(NamedNode(f's:{BlankNode().value}'), p, NamedNode(f'o:{BlankNode().value}'))
@@ -28,11 +30,17 @@ def quads(n=1, *,
             _ = triple()
             predicate = NamedNode('http://www.w3.org/1999/02/22-rdf-syntax-ns#reifies')
             # https://github.com/oxigraph/oxigraph/issues/1472
-            _ = Triple(_.subject, predicate, triple())
-            #_ = Triple(_.subject, _.predicate, triple()) # not handled
+            id = _.subject
+            id = BlankNode()
+            _ = Triple(id, predicate, triple())
+            yield Quad(*_.object,  NamedNode(f'g:{graph}') if graph else None)
+            yield Quad(*_,         NamedNode(f'g:{graph}') if graph else None)
+            #_ = Triple(id, _.predicate, triple()) # not handled
         else:
             _ = triple()
-        yield Quad(*_,  NamedNode(f'g:{graph}') if graph else None)
+            yield Quad(*_,  NamedNode(f'g:{graph}') if graph else None)
+
+
 
 class Quads:
     def __init__(self, **kwargs):
@@ -44,8 +52,6 @@ class Quads:
         return repr(self.params).replace('namespace', 'Quads')
 
 
-def ttl():
-    return open('test.ttl').read()
 
 def args():
     from itertools import product
@@ -54,11 +60,22 @@ def args():
     class graph(list): ...
     graph = graph(['x', 'y' ])
     class anon(list): ...
-    anon = anon([ True])
+    anon = anon([ False, True ])
     class nested(list): ...
-    nested = nested([True, False ])
+    nested = nested([ True ])
     class rand(list): ...
     rand = rand([False])
+
+    # class n(list): ...
+    # n = n([100,  ])
+    # class graph(list): ...
+    # graph = graph(['x',  ])
+    # class anon(list): ...
+    # anon = anon([ True])
+    # class nested(list): ...
+    # nested = nested([True ])
+    # class rand(list): ...
+    # rand = rand([False])
 
     argsl = n, anon, rand, nested, graph
     _ = product(*argsl)
@@ -66,12 +83,17 @@ def args():
 def rules():
     return [Quads(**kw) for kw in args() ]
 
-def test():
+def test_cycling():
     rs = rules()
+    n = 5
     from rdf_engine import Engine
-    e = Engine(rules=rs, MAX_NCYCLES=5, derand='canonicalize',)
+    e = Engine(rules=rs, MAX_NCYCLES=n,
+               derand='canonicalize',
+               #log_debug=True,
+                )
     s = e.run()
     print(len((s)))
+    assert(e.i <n)
     #assert(len(s) == sum(len(frozenset(r('_'))) for r in rules() )   )
     print(frozenset(t.graph_name for t in s))
 

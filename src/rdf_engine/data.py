@@ -41,14 +41,17 @@ class _reification:
                 # # not the same as
                 # <<d:s d:p d:o>> m:p m:o; m:p2 m:o2 .
                 # doesn't make sense for rdf-engine
-                # deterministic. reduce blank nodes in output
-                id = t.subject
-                if deterministic_nested:
-                    old = id
-                    id = hash(ndt)
-                    id = abs(id)
-                    id = self.terms.nn(uri, id)
-                    new = id
+                if deterministic_nested: # to reduce blank nodes in output
+                    if not isinstance(ndt.subject, self.BlankNode) and not isinstance(ndt.object, self.BlankNode):
+                        #assert(not isinstance(ndt.predicate, self.BlankNode)) # impossible
+                        old = t.subject
+                        id = hash(ndt)
+                        id = abs(id)
+                        id = self.terms.nn(uri, id)
+                        new = id
+                    else:
+                        id = t.subject
+                        old = new = id
                 else:
                     id = t.subject
                     old = new = id
