@@ -11,9 +11,12 @@ class Engine:
         rules: Iterable[Rule] = [], *,
         db: Store=Store(),
             MAX_NCYCLES: int=99,
-        # safe settings to avoid inf cycling
-        # but reduces performance
-        derand: Literal['canonicalize'] | DeanonPrefix | Literal[False]  = 'canonicalize', #signature(quads.deanon).parameters['uri'].default,
+        # safe settings to avoid inf cycling and worst performance
+        derand: Literal['canonicalize'] | DeanonPrefix | Literal[False]
+                # improves performance vs just 'canonicalize'
+                # in the more general case
+                # bc blank nodes don't get a chance  to get recirculated
+                 = signature(quads.deanon).parameters['uri'].default, 
             log_data: bool=True, log_print: bool=True, log_debug: bool=False
         ) -> None:
         self.rules = list(rules)
