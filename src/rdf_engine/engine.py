@@ -53,6 +53,7 @@ class Engine:
         from collections import namedtuple
         from types import SimpleNamespace as NS
         from sys import stderr
+        logger.remove()
         if log_print: logger.add(stderr, format="{message}", level='INFO' )
         if log_debug: logger.add(stderr, level='DEBUG')
         self.logging = NS(
